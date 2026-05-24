@@ -1,0 +1,134 @@
+.scroll-stack-list {
+  width: min(100%, 900px);
+  margin: 0;
+  padding-top: 4px;
+  padding-bottom: 3vh;
+}
+
+.scroll-stack-item {
+  position: relative;
+  height: 64vh;
+}
+
+.scroll-stack-item + .scroll-stack-item {
+  margin-top: -8vh;
+}
+
+.scroll-stack-card {
+  position: sticky;
+  top: 108px;
+  z-index: calc(30 + var(--stack-index));
+  display: block;
+  min-height: clamp(250px, 38vh, 320px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(30, 30, 30, 0.96) 0%,
+    rgba(10, 10, 10, 0.96) 100%
+  );
+  text-decoration: none;
+  color: inherit;
+  padding: 20px 20px 18px;
+  transform: translateY(calc(var(--stack-index) * 14px))
+    scale(calc(1 - var(--stack-index) * 0.045));
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  will-change: transform;
+}
+
+.scroll-stack-card::before,
+.scroll-stack-card::after {
+  display: none;
+}
+
+.scroll-stack-card::before {
+  transform: translateY(-16px) scale(0.985);
+  opacity: 0.45;
+}
+
+.scroll-stack-card::after {
+  transform: translateY(-30px) scale(0.968);
+  opacity: 0.3;
+}
+
+.scroll-stack-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.scroll-stack-head h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(21px, 3vw, 30px);
+  line-height: 1.24;
+  max-width: 90%;
+}
+
+.scroll-stack-head svg {
+  color: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.scroll-stack-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: none;
+}
+
+.scroll-stack-tech-list {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.scroll-stack-tech-badge {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 6px 9px;
+}
+
+@media (max-width: 768px) {
+  .scroll-stack-list {
+    width: 100%;
+    padding-bottom: 8px;
+  }
+
+  .scroll-stack-item {
+    height: auto;
+  }
+
+  .scroll-stack-item + .scroll-stack-item {
+    margin-top: 12px;
+  }
+
+  .scroll-stack-card {
+    position: relative;
+    top: auto;
+    min-height: 0;
+    padding: 15px;
+    transform: none;
+  }
+
+  .scroll-stack-head h3 {
+    max-width: 100%;
+    font-size: clamp(19px, 5.8vw, 24px);
+  }
+
+  .scroll-stack-card p {
+    font-size: 13px;
+  }
+}

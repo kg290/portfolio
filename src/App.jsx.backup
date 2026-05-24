@@ -1,0 +1,949 @@
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Existing components
+import AntiGravity from './components/AntiGravity/AntiGravity';
+import Waves from './components/Waves/Waves';
+import TargetCursor from './components/TargetCursor/TargetCursor';
+import StaggeredMenu from './components/StaggeredMenu/StaggeredMenu';
+import GooeyNav from './components/GooeyNav/GooeyNav';
+import ProfileCard from './components/ProfileCard/ProfileCard';
+import Lanyard from './components/Lanyard/Lanyard';
+import LogoLoop from './components/LogoLoop/LogoLoop';
+import PixelCard from './components/PixelCard/PixelCard';
+import StarBorder from './components/StarBorder/StarBorder';
+
+// New animation components
+import TextReveal, { TextRevealByChar } from './components/TextReveal/TextReveal';
+import MagneticButton, { MagneticWrapper } from './components/MagneticButton/MagneticButton';
+import SpotlightCard from './components/SpotlightCard/SpotlightCard';
+import BorderBeam from './components/BorderBeam/BorderBeam';
+import BlurFade, { FadeIn, StaggerContainer, StaggerItem } from './components/BlurFade/BlurFade';
+import GridPattern, { DotPattern, RetroGrid } from './components/GridPattern/GridPattern';
+import NumberCounter, { StatCard } from './components/NumberCounter/NumberCounter';
+import GradientText from './components/GradientText/GradientText';
+import Meteors from './components/Meteors/Meteors';
+import Preloader, { MinimalPreloader } from './components/Preloader/Preloader';
+import ShinyButton, { GlowButton, OutlineButton } from './components/ShinyButton/ShinyButton';
+import Terminal from './components/Terminal/Terminal';
+
+// Icons
+import { 
+  FaGithub, FaLinkedin, FaEnvelope, FaPython, FaReact, FaDocker, FaAws, 
+  FaNodeJs, FaDatabase, FaCode, FaBrain, FaRocket, FaTerminal,
+  FaArrowRight, FaDownload, FaExternalLinkAlt
+} from 'react-icons/fa';
+import { 
+  SiTensorflow, SiPytorch, SiOpenai, SiKubernetes, SiMongodb, SiFastapi,
+  SiTypescript, SiTailwindcss, SiNextdotjs, SiLangchain, SiHuggingface,
+  SiGooglecloud, SiFirebase, SiGraphql, SiRedis, SiPostgresql
+} from 'react-icons/si';
+import { cn } from './lib/utils';
+import './App.css';
+
+const AVATAR_URL = 'https://avatars.githubusercontent.com/u/210736705';
+
+const NAV_ITEMS = [
+  { label: 'Home', link: '#hero' },
+  { label: 'About', link: '#about' },
+  { label: 'Experience', link: '#experience' },
+  { label: 'Skills', link: '#skills' },
+  { label: 'Projects', link: '#projects' },
+  { label: 'Contact', link: '#contact' },
+];
+
+const EXPERIENCE = [
+  {
+    title: 'AI/ML Research',
+    company: 'Self-Directed Projects',
+    period: '2023 - Present',
+    description: 'Building cutting-edge machine learning models and conducting research in NLP, computer vision, and generative AI.',
+    tech: ['PyTorch', 'TensorFlow', 'Transformers', 'LangChain'],
+  },
+  {
+    title: 'Full Stack Development',
+    company: 'Freelance & Open Source',
+    period: '2022 - Present',
+    description: 'Developing production-ready web applications with modern tech stacks and cloud deployments.',
+    tech: ['React', 'Next.js', 'FastAPI', 'Docker'],
+  },
+  {
+    title: 'Student at VIT',
+    company: 'Vellore Institute of Technology',
+    period: '2021 - Present',
+    description: 'Pursuing degree with focus on computer science, artificial intelligence, and software engineering.',
+    tech: ['Python', 'Java', 'Data Structures', 'Algorithms'],
+  },
+];
+
+const PROJECTS = [
+  {
+    title: 'Hack for Green Bharat',
+    description: 'AI-powered environmental sustainability platform that analyzes satellite imagery to detect deforestation and provides actionable insights for conservation efforts.',
+    tech: ['Python', 'TensorFlow', 'React', 'GCP'],
+    link: 'https://github.com/kg290/hack-for-green-bharat_TEAM_DDOS_ME',
+    image: 'https://opengraph.githubassets.com/1/kg290/hack-for-green-bharat_TEAM_DDOS_ME',
+    featured: true,
+  },
+  {
+    title: 'Neural Style Transfer',
+    description: 'Deep learning application that applies artistic styles to images using convolutional neural networks and transfer learning techniques.',
+    tech: ['PyTorch', 'CNN', 'Computer Vision'],
+    link: 'https://github.com/kg290',
+    featured: true,
+  },
+  {
+    title: 'LLM Chat Application',
+    description: 'Full-stack conversational AI application with RAG (Retrieval Augmented Generation) for knowledge-grounded responses.',
+    tech: ['LangChain', 'OpenAI', 'FastAPI', 'React'],
+    link: 'https://github.com/kg290',
+    featured: true,
+  },
+  {
+    title: 'Real-time Object Detection',
+    description: 'Computer vision system for real-time object detection and tracking using YOLO architecture.',
+    tech: ['YOLO', 'OpenCV', 'Python'],
+    link: 'https://github.com/kg290',
+  },
+  {
+    title: 'Cloud Infrastructure Automation',
+    description: 'Infrastructure as Code solutions for automated cloud deployments and CI/CD pipelines.',
+    tech: ['Docker', 'Kubernetes', 'AWS', 'GitHub Actions'],
+    link: 'https://github.com/kg290',
+  },
+  {
+    title: 'Portfolio Website',
+    description: 'This website! Built with React, Framer Motion, Three.js, and advanced animation techniques.',
+    tech: ['React', 'Framer Motion', 'Three.js', 'Tailwind'],
+    link: '#',
+  },
+];
+
+const SKILLS = [
+  { icon: <FaPython size={24} />, name: 'Python', level: 95 },
+  { icon: <SiTensorflow size={24} />, name: 'TensorFlow', level: 88 },
+  { icon: <SiPytorch size={24} />, name: 'PyTorch', level: 90 },
+  { icon: <SiOpenai size={24} />, name: 'OpenAI', level: 85 },
+  { icon: <FaReact size={24} />, name: 'React', level: 92 },
+  { icon: <SiNextdotjs size={24} />, name: 'Next.js', level: 85 },
+  { icon: <SiTypescript size={24} />, name: 'TypeScript', level: 82 },
+  { icon: <SiFastapi size={24} />, name: 'FastAPI', level: 88 },
+  { icon: <FaDocker size={24} />, name: 'Docker', level: 85 },
+  { icon: <SiKubernetes size={24} />, name: 'Kubernetes', level: 75 },
+  { icon: <FaAws size={24} />, name: 'AWS', level: 80 },
+  { icon: <SiMongodb size={24} />, name: 'MongoDB', level: 82 },
+  { icon: <SiPostgresql size={24} />, name: 'PostgreSQL', level: 80 },
+  { icon: <SiLangchain size={24} />, name: 'LangChain', level: 88 },
+  { icon: <SiHuggingface size={24} />, name: 'Hugging Face', level: 85 },
+  { icon: <SiTailwindcss size={24} />, name: 'Tailwind', level: 90 },
+];
+
+const SKILL_CATEGORIES = [
+  {
+    title: 'AI / Machine Learning',
+    icon: <FaBrain className="text-2xl" />,
+    variant: 'blue',
+    items: ['TensorFlow', 'PyTorch', 'Scikit-learn', 'OpenAI', 'Hugging Face', 'LangChain', 'Computer Vision', 'NLP'],
+    color: '#6366f1',
+  },
+  {
+    title: 'Full Stack Development',
+    icon: <FaCode className="text-2xl" />,
+    variant: 'default',
+    items: ['React', 'Next.js', 'TypeScript', 'Node.js', 'FastAPI', 'GraphQL', 'REST APIs', 'Tailwind CSS'],
+    color: '#a855f7',
+  },
+  {
+    title: 'Cloud & DevOps',
+    icon: <FaRocket className="text-2xl" />,
+    variant: 'yellow',
+    items: ['Docker', 'Kubernetes', 'AWS', 'GCP', 'CI/CD', 'Linux', 'Terraform', 'GitHub Actions'],
+    color: '#22d3ee',
+  },
+];
+
+const STATS = [
+  { value: 20, suffix: '+', label: 'Projects Completed' },
+  { value: 15, suffix: '+', label: 'Technologies Used' },
+  { value: 500, suffix: '+', label: 'Commits This Year' },
+  { value: 3, suffix: '+', label: 'Years Experience' },
+];
+
+function App() {
+  const [activeSection, setActiveSection] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const sectionsRef = useRef([]);
+
+  useEffect(() => {
+    const secs = sectionsRef.current.filter(Boolean);
+    if (!secs.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = sectionsRef.current.indexOf(entry.target);
+            if (idx !== -1) setActiveSection(idx);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    secs.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, [isLoaded]);
+
+  const scrollTo = (id) => {
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <>
+      <Preloader onComplete={() => setIsLoaded(true)} minDuration={2500} />
+      
+      <AnimatePresence>
+        {isLoaded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="app"
+          >
+            {/* ══════════════════ BACKGROUND LAYERS ══════════════════ */}
+            <div className="fixed inset-0 z-0">
+              <AntiGravity
+                count={200}
+                magnetRadius={15}
+                ringRadius={12}
+                waveSpeed={0.3}
+                waveAmplitude={1.2}
+                particleSize={1.2}
+                lerpSpeed={0.04}
+                color="#6366f1"
+                autoAnimate={true}
+                particleVariance={1.2}
+                rotationSpeed={0.15}
+                depthFactor={1.2}
+                pulseSpeed={2.5}
+                fieldStrength={8}
+                particleShape="capsule"
+              />
+            </div>
+            
+            <div className="fixed inset-0 z-0 opacity-20 pointer-events-none">
+              <Waves
+                lineColor="rgba(99, 102, 241, 0.08)"
+                backgroundColor="transparent"
+                waveSpeedX={0.008}
+                waveSpeedY={0.004}
+                waveAmpX={35}
+                waveAmpY={15}
+              />
+            </div>
+
+            {/* ══════════════════ CURSOR ══════════════════ */}
+            <TargetCursor targetSelector="button, a, .cursor-target, .cta-btn, .nav-card-link, .sm-panel-item, .star-border-container, .pixel-card, .glare-hover, .project-link, .contact-anchor, .menu__item-link, .magnetic-target, .spotlight-card" />
+
+            {/* ══════════════════ NAVIGATION ══════════════════ */}
+            <StaggeredMenu
+              items={NAV_ITEMS.map((item) => ({ label: item.label, link: item.link }))}
+              socialItems={[
+                { label: 'GitHub', link: 'https://github.com/kg290' },
+                { label: 'LinkedIn', link: 'https://linkedin.com/in/karnajeet-gosavi-0797452bb' },
+                { label: 'Email', link: 'mailto:karnajeet.gosavi23@vit.edu' },
+              ]}
+              colors={['#030303', '#6366f1']}
+              accentColor="#6366f1"
+              menuButtonColor="#fff"
+              openMenuButtonColor="#fff"
+              isFixed
+              closeOnClickAway
+            />
+
+            <GooeyNav
+              items={NAV_ITEMS.map((item) => ({ label: item.label, href: item.link }))}
+              initialActiveIndex={activeSection}
+            />
+
+            {/* ═══════════════════════════════════════════════════════════
+                                      HERO SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="hero" 
+              className="relative min-h-screen flex items-center justify-center overflow-hidden"
+              ref={(el) => (sectionsRef.current[0] = el)}
+            >
+              <div className="absolute inset-0 z-0">
+                <RetroGrid className="opacity-30" />
+              </div>
+              
+              <Meteors number={15} className="z-0" />
+
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                  {/* Left Content */}
+                  <div className="space-y-8">
+                    <BlurFade delay={0.1} inView>
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-sm text-primary">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        Available for opportunities
+                      </div>
+                    </BlurFade>
+
+                    <div className="space-y-4">
+                      <BlurFade delay={0.2} inView>
+                        <p className="text-lg text-muted-foreground">Hi, I'm</p>
+                      </BlurFade>
+                      
+                      <BlurFade delay={0.3} inView>
+                        <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight">
+                          <TextReveal className="text-white">Karnajeet</TextReveal>
+                          <br />
+                          <GradientText 
+                            className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black"
+                            colors={['#6366f1', '#a855f7', '#ec4899', '#6366f1']}
+                            animationSpeed={6}
+                          >
+                            Gosavi
+                          </GradientText>
+                        </h1>
+                      </BlurFade>
+
+                      <BlurFade delay={0.4} inView>
+                        <p className="text-xl sm:text-2xl text-white/60 max-w-xl leading-relaxed">
+                          <span className="text-white font-semibold">AI/ML Engineer</span> crafting intelligent systems 
+                          that push the boundaries of what's possible.
+                        </p>
+                      </BlurFade>
+                    </div>
+
+                    <BlurFade delay={0.5} inView>
+                      <div className="flex flex-wrap gap-4">
+                        <MagneticButton
+                          strength={30}
+                          className="magnetic-target"
+                          onClick={() => scrollTo('#projects')}
+                        >
+                          <GlowButton className="px-8 py-4 text-base">
+                            View My Work <FaArrowRight className="ml-2" />
+                          </GlowButton>
+                        </MagneticButton>
+
+                        <MagneticButton
+                          strength={30}
+                          className="magnetic-target"
+                          onClick={() => scrollTo('#contact')}
+                        >
+                          <OutlineButton className="px-8 py-4 text-base">
+                            Get In Touch
+                          </OutlineButton>
+                        </MagneticButton>
+                      </div>
+                    </BlurFade>
+
+                    <BlurFade delay={0.6} inView>
+                      <div className="flex items-center gap-6 pt-4">
+                        <MagneticWrapper strength={50}>
+                          <a 
+                            href="https://github.com/kg290" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-white/50 hover:text-white transition-colors p-2"
+                          >
+                            <FaGithub size={24} />
+                          </a>
+                        </MagneticWrapper>
+                        <MagneticWrapper strength={50}>
+                          <a 
+                            href="https://linkedin.com/in/karnajeet-gosavi-0797452bb" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-white/50 hover:text-white transition-colors p-2"
+                          >
+                            <FaLinkedin size={24} />
+                          </a>
+                        </MagneticWrapper>
+                        <MagneticWrapper strength={50}>
+                          <a 
+                            href="mailto:karnajeet.gosavi23@vit.edu"
+                            className="text-white/50 hover:text-white transition-colors p-2"
+                          >
+                            <FaEnvelope size={24} />
+                          </a>
+                        </MagneticWrapper>
+                      </div>
+                    </BlurFade>
+                  </div>
+
+                  {/* Right Content - 3D Lanyard */}
+                  <BlurFade delay={0.4} inView className="hidden lg:flex justify-center">
+                    <div className="relative">
+                      <div className="absolute -inset-20 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 rounded-full blur-3xl opacity-30 animate-pulse-slow" />
+                      <Lanyard 
+                        name="Karnajeet Gosavi" 
+                        handle="@kg290" 
+                        title="AI/ML Engineer" 
+                        avatarUrl={AVATAR_URL} 
+                      />
+                    </div>
+                  </BlurFade>
+                </div>
+
+                {/* Scroll Indicator */}
+                <motion.div 
+                  className="absolute bottom-10 left-1/2 -translate-x-1/2"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                >
+                  <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="flex flex-col items-center gap-2 text-white/30"
+                  >
+                    <span className="text-xs uppercase tracking-widest">Scroll</span>
+                    <div className="w-5 h-8 rounded-full border-2 border-white/20 flex justify-center pt-2">
+                      <motion.div
+                        animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-1 h-1 rounded-full bg-white/50"
+                      />
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                      ABOUT SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="about" 
+              className="relative py-32 overflow-hidden"
+              ref={(el) => (sectionsRef.current[1] = el)}
+            >
+              <div className="absolute inset-0 z-0">
+                <DotPattern className="opacity-20" />
+              </div>
+
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                <BlurFade delay={0.1} inView>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-primary font-mono text-sm">01.</span>
+                    <h2 className="text-4xl sm:text-5xl font-bold text-white">About Me</h2>
+                    <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4" />
+                  </div>
+                </BlurFade>
+
+                <div className="grid lg:grid-cols-2 gap-16 mt-16">
+                  {/* Profile Card */}
+                  <BlurFade delay={0.2} inView>
+                    <div className="flex flex-col items-center lg:items-start gap-8">
+                      <ProfileCard
+                        name="Karnajeet Gosavi"
+                        handle="@kg290"
+                        title="AI/ML Engineer • India"
+                        avatarUrl={AVATAR_URL}
+                        status="Open to opportunities"
+                        showUserInfo
+                        enableTilt
+                        behindGlowEnabled
+                        behindGlowColor="rgba(99, 102, 241, 0.35)"
+                      />
+                      
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-2 gap-4 w-full max-w-md">
+                        {STATS.map((stat, i) => (
+                          <SpotlightCard 
+                            key={i} 
+                            className="p-6 text-center spotlight-card"
+                            spotlightColor="rgba(99, 102, 241, 0.1)"
+                          >
+                            <div className="text-3xl font-bold text-white">
+                              <NumberCounter value={stat.value} suffix={stat.suffix} delay={0.3 + i * 0.1} />
+                            </div>
+                            <div className="text-xs text-white/50 mt-1 uppercase tracking-wider">{stat.label}</div>
+                          </SpotlightCard>
+                        ))}
+                      </div>
+                    </div>
+                  </BlurFade>
+
+                  {/* About Content */}
+                  <BlurFade delay={0.3} inView>
+                    <div className="space-y-6">
+                      <div className="relative">
+                        <SpotlightCard className="p-8 spotlight-card" spotlightColor="rgba(168, 85, 247, 0.1)">
+                          <BorderBeam size={200} duration={12} />
+                          <div className="space-y-5 text-white/70 leading-relaxed">
+                            <p>
+                              I'm a passionate <span className="text-white font-semibold">AI/ML engineer</span> based in India 
+                              with a deep fascination for building intelligent systems that solve real-world problems. Currently 
+                              pursuing my education at <span className="text-primary">VIT</span> while working on cutting-edge 
+                              machine learning projects.
+                            </p>
+                            <p>
+                              My expertise spans <span className="text-secondary">deep learning</span>, natural language processing, 
+                              computer vision, and full-stack development. I love combining AI capabilities with modern web 
+                              technologies to create impactful applications that make a difference.
+                            </p>
+                            <p>
+                              When I'm not training models or debugging neural networks, you'll find me contributing to 
+                              open-source projects, exploring new technologies, and sharing knowledge with the developer community.
+                            </p>
+                          </div>
+                        </SpotlightCard>
+                      </div>
+
+                      {/* Quick Facts */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10">
+                          <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                            <FaBrain size={18} />
+                          </div>
+                          <div>
+                            <div className="text-xs text-white/50">Focus</div>
+                            <div className="text-sm text-white font-medium">AI/ML Research</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10">
+                          <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center text-secondary">
+                            <FaCode size={18} />
+                          </div>
+                          <div>
+                            <div className="text-xs text-white/50">Specialty</div>
+                            <div className="text-sm text-white font-medium">Full Stack Dev</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Resume Button */}
+                      <MagneticButton strength={20} className="magnetic-target">
+                        <ShinyButton className="w-full justify-center gap-2">
+                          <FaDownload /> Download Resume
+                        </ShinyButton>
+                      </MagneticButton>
+                    </div>
+                  </BlurFade>
+                </div>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                    EXPERIENCE SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="experience" 
+              className="relative py-32 overflow-hidden"
+              ref={(el) => (sectionsRef.current[2] = el)}
+            >
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                <BlurFade delay={0.1} inView>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-primary font-mono text-sm">02.</span>
+                    <h2 className="text-4xl sm:text-5xl font-bold text-white">Experience</h2>
+                    <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4" />
+                  </div>
+                  <p className="text-white/50 max-w-2xl mt-4 mb-16">
+                    My journey in technology, from learning fundamentals to building production systems.
+                  </p>
+                </BlurFade>
+
+                {/* Timeline */}
+                <div className="relative">
+                  {/* Timeline Line */}
+                  <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-secondary to-transparent md:-translate-x-1/2" />
+
+                  <StaggerContainer staggerDelay={0.15} className="space-y-12">
+                    {EXPERIENCE.map((exp, i) => (
+                      <StaggerItem key={i}>
+                        <div className={cn(
+                          "relative grid md:grid-cols-2 gap-8 md:gap-16",
+                          i % 2 === 0 ? "" : "md:direction-rtl"
+                        )}>
+                          {/* Timeline Dot */}
+                          <div className="absolute left-0 md:left-1/2 top-0 w-4 h-4 rounded-full bg-primary border-4 border-background -translate-x-1/2 z-10">
+                            <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-20" />
+                          </div>
+
+                          {/* Content */}
+                          <div className={cn(
+                            "ml-8 md:ml-0",
+                            i % 2 === 0 ? "md:pr-16 md:text-right" : "md:col-start-2 md:pl-16"
+                          )}>
+                            <SpotlightCard className="p-6 spotlight-card" spotlightColor={`${i === 0 ? 'rgba(99, 102, 241, 0.1)' : i === 1 ? 'rgba(168, 85, 247, 0.1)' : 'rgba(34, 211, 238, 0.1)'}`}>
+                              <BorderBeam size={150} duration={10 + i * 2} colorFrom={i === 0 ? '#6366f1' : i === 1 ? '#a855f7' : '#22d3ee'} colorTo={i === 0 ? '#a855f7' : i === 1 ? '#ec4899' : '#6366f1'} />
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-2 text-xs text-primary font-mono">
+                                  {exp.period}
+                                </div>
+                                <h3 className="text-xl font-bold text-white">{exp.title}</h3>
+                                <p className="text-secondary font-medium">{exp.company}</p>
+                                <p className="text-white/60 text-sm leading-relaxed">{exp.description}</p>
+                                <div className={cn(
+                                  "flex flex-wrap gap-2 pt-2",
+                                  i % 2 === 0 ? "md:justify-end" : ""
+                                )}>
+                                  {exp.tech.map((t) => (
+                                    <span key={t} className="px-3 py-1 text-xs rounded-full bg-white/5 border border-white/10 text-white/70">
+                                      {t}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </SpotlightCard>
+                          </div>
+                        </div>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </div>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                      SKILLS SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="skills" 
+              className="relative py-32 overflow-hidden"
+              ref={(el) => (sectionsRef.current[3] = el)}
+            >
+              <div className="absolute inset-0 z-0">
+                <GridPattern className="opacity-10" width={60} height={60} />
+              </div>
+
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                <BlurFade delay={0.1} inView>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-primary font-mono text-sm">03.</span>
+                    <h2 className="text-4xl sm:text-5xl font-bold text-white">Tech Stack</h2>
+                    <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4" />
+                  </div>
+                  <p className="text-white/50 max-w-2xl mt-4">
+                    Technologies I work with to bring ideas to life.
+                  </p>
+                </BlurFade>
+
+                {/* Marquee Skills */}
+                <div className="mt-16 space-y-4">
+                  <LogoLoop
+                    items={SKILLS.slice(0, 8).map((s) => (
+                      <div key={s.name} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                        <span className="text-primary">{s.icon}</span>
+                        <span className="text-white font-medium">{s.name}</span>
+                      </div>
+                    ))}
+                    speed={25}
+                    direction="left"
+                  />
+                  <LogoLoop
+                    items={SKILLS.slice(8).map((s) => (
+                      <div key={s.name} className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                        <span className="text-secondary">{s.icon}</span>
+                        <span className="text-white font-medium">{s.name}</span>
+                      </div>
+                    ))}
+                    speed={20}
+                    direction="right"
+                  />
+                </div>
+
+                {/* Skill Categories */}
+                <div className="grid md:grid-cols-3 gap-6 mt-16">
+                  {SKILL_CATEGORIES.map((cat, i) => (
+                    <BlurFade key={cat.title} delay={0.2 + i * 0.1} inView>
+                      <PixelCard variant={cat.variant} gap={5} speed={35} className="h-full min-h-[320px] w-full">
+                        <div className="relative z-10 p-8 h-full flex flex-col">
+                          <div 
+                            className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6"
+                            style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+                          >
+                            {cat.icon}
+                          </div>
+                          <h3 className="text-xl font-bold text-white mb-4">{cat.title}</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {cat.items.map((item) => (
+                              <span 
+                                key={item} 
+                                className="px-3 py-1.5 text-sm rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:border-white/20 transition-colors"
+                              >
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </PixelCard>
+                    </BlurFade>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                     PROJECTS SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="projects" 
+              className="relative py-32 overflow-hidden"
+              ref={(el) => (sectionsRef.current[4] = el)}
+            >
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                <BlurFade delay={0.1} inView>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="text-primary font-mono text-sm">04.</span>
+                    <h2 className="text-4xl sm:text-5xl font-bold text-white">Featured Projects</h2>
+                    <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent ml-4" />
+                  </div>
+                  <p className="text-white/50 max-w-2xl mt-4">
+                    A selection of projects that showcase my skills and passion.
+                  </p>
+                </BlurFade>
+
+                {/* Featured Projects */}
+                <div className="mt-16 space-y-24">
+                  {PROJECTS.filter(p => p.featured).map((project, i) => (
+                    <BlurFade key={project.title} delay={0.2 + i * 0.1} inView>
+                      <div className={cn(
+                        "grid lg:grid-cols-2 gap-8 lg:gap-16 items-center",
+                        i % 2 === 1 ? "lg:direction-rtl" : ""
+                      )}>
+                        {/* Project Image */}
+                        <div className="relative group">
+                          <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-card">
+                            {project.image ? (
+                              <img 
+                                src={project.image} 
+                                alt={project.title}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary/10">
+                                <FaCode className="text-6xl text-white/20" />
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                          </div>
+                        </div>
+
+                        {/* Project Info */}
+                        <div className={cn("space-y-6", i % 2 === 1 ? "lg:text-right" : "")}>
+                          <div>
+                            <span className="text-primary font-mono text-sm">Featured Project</span>
+                            <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2">{project.title}</h3>
+                          </div>
+                          
+                          <SpotlightCard className="p-6 spotlight-card" spotlightColor="rgba(99, 102, 241, 0.08)">
+                            <p className="text-white/70 leading-relaxed">{project.description}</p>
+                          </SpotlightCard>
+
+                          <div className={cn(
+                            "flex flex-wrap gap-3",
+                            i % 2 === 1 ? "lg:justify-end" : ""
+                          )}>
+                            {project.tech.map((t) => (
+                              <span key={t} className="px-4 py-2 text-sm rounded-lg bg-white/5 border border-white/10 text-primary font-mono">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className={cn(
+                            "flex items-center gap-4",
+                            i % 2 === 1 ? "lg:justify-end" : ""
+                          )}>
+                            <a 
+                              href={project.link} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-white hover:text-primary transition-colors"
+                            >
+                              <FaGithub size={20} />
+                              <span>View Code</span>
+                            </a>
+                            <a 
+                              href={project.link} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-white hover:text-primary transition-colors"
+                            >
+                              <FaExternalLinkAlt size={16} />
+                              <span>Live Demo</span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </BlurFade>
+                  ))}
+                </div>
+
+                {/* Other Projects Grid */}
+                <div className="mt-24">
+                  <BlurFade delay={0.1} inView>
+                    <h3 className="text-2xl font-bold text-white mb-8">Other Noteworthy Projects</h3>
+                  </BlurFade>
+                  
+                  <StaggerContainer staggerDelay={0.1} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {PROJECTS.filter(p => !p.featured).map((project) => (
+                      <StaggerItem key={project.title}>
+                        <a 
+                          href={project.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block h-full project-link"
+                        >
+                          <SpotlightCard className="h-full p-6 spotlight-card group" spotlightColor="rgba(168, 85, 247, 0.1)">
+                            <div className="flex flex-col h-full">
+                              <div className="flex items-center justify-between mb-4">
+                                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                  <FaCode size={20} />
+                                </div>
+                                <FaExternalLinkAlt className="text-white/30 group-hover:text-primary transition-colors" />
+                              </div>
+                              <h4 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">
+                                {project.title}
+                              </h4>
+                              <p className="text-white/60 text-sm flex-1 mb-4">{project.description}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {project.tech.map((t) => (
+                                  <span key={t} className="text-xs text-white/50 font-mono">{t}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </SpotlightCard>
+                        </a>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </div>
+
+                {/* View All Projects Button */}
+                <BlurFade delay={0.3} inView>
+                  <div className="flex justify-center mt-16">
+                    <MagneticButton strength={25} className="magnetic-target">
+                      <a 
+                        href="https://github.com/kg290" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <OutlineButton className="px-8 py-4">
+                          View All Projects on GitHub <FaGithub className="ml-2" />
+                        </OutlineButton>
+                      </a>
+                    </MagneticButton>
+                  </div>
+                </BlurFade>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                     TERMINAL EASTER EGG
+                ═══════════════════════════════════════════════════════════ */}
+            <section className="relative py-16 overflow-hidden">
+              <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+                <BlurFade delay={0.1} inView>
+                  <div className="flex items-center justify-center gap-4 mb-8">
+                    <FaTerminal className="text-primary" />
+                    <span className="text-white/50 text-sm">Interactive Terminal — Try typing "help"</span>
+                  </div>
+                </BlurFade>
+                <BlurFade delay={0.2} inView>
+                  <Terminal />
+                </BlurFade>
+              </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                                      CONTACT SECTION
+                ═══════════════════════════════════════════════════════════ */}
+            <section 
+              id="contact" 
+              className="relative py-32 overflow-hidden"
+              ref={(el) => (sectionsRef.current[5] = el)}
+            >
+              <div className="absolute inset-0 z-0">
+                <RetroGrid className="opacity-20" angle={75} />
+              </div>
+
+              <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 text-center">
+                <BlurFade delay={0.1} inView>
+                  <span className="text-primary font-mono text-sm">05. What's Next?</span>
+                  <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-4 mb-6">
+                    Let's Build Something<br />
+                    <GradientText colors={['#6366f1', '#a855f7', '#ec4899']}>
+                      Amazing Together
+                    </GradientText>
+                  </h2>
+                  <p className="text-white/60 text-lg max-w-2xl mx-auto mb-12">
+                    I'm currently looking for new opportunities and my inbox is always open. 
+                    Whether you have a question, want to collaborate, or just want to say hi — 
+                    I'll try my best to get back to you!
+                  </p>
+                </BlurFade>
+
+                <BlurFade delay={0.2} inView>
+                  <div className="flex flex-wrap justify-center gap-6 mb-16">
+                    <MagneticButton strength={30} className="magnetic-target">
+                      <a href="mailto:karnajeet.gosavi23@vit.edu">
+                        <GlowButton className="px-10 py-5 text-lg">
+                          <FaEnvelope className="mr-3" /> Say Hello
+                        </GlowButton>
+                      </a>
+                    </MagneticButton>
+                  </div>
+                </BlurFade>
+
+                <BlurFade delay={0.3} inView>
+                  <div className="flex justify-center gap-8">
+                    {[
+                      { icon: <FaGithub size={24} />, link: 'https://github.com/kg290', label: 'GitHub' },
+                      { icon: <FaLinkedin size={24} />, link: 'https://linkedin.com/in/karnajeet-gosavi-0797452bb', label: 'LinkedIn' },
+                      { icon: <FaEnvelope size={24} />, link: 'mailto:karnajeet.gosavi23@vit.edu', label: 'Email' },
+                    ].map((social) => (
+                      <MagneticWrapper key={social.label} strength={60}>
+                        <a
+                          href={social.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex flex-col items-center gap-2"
+                        >
+                          <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 group-hover:text-primary group-hover:border-primary/50 transition-all duration-300">
+                            {social.icon}
+                          </div>
+                          <span className="text-xs text-white/30 group-hover:text-white/50 transition-colors">
+                            {social.label}
+                          </span>
+                        </a>
+                      </MagneticWrapper>
+                    ))}
+                  </div>
+                </BlurFade>
+              </div>
+            </section>
+
+            {/* ══════════════════ FOOTER ══════════════════ */}
+            <footer className="relative z-10 py-8 border-t border-white/5">
+              <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-white/30 text-sm">
+                    <span>Designed & Built by</span>
+                    <span className="text-primary font-semibold">Karnajeet Gosavi</span>
+                  </div>
+                  <div className="text-white/30 text-sm">
+                    © {new Date().getFullYear()} All rights reserved.
+                  </div>
+                </div>
+              </div>
+            </footer>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+export default App;

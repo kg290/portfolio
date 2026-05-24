@@ -1,0 +1,300 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap");
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-family:
+        "Sora",
+        system-ui,
+        -apple-system,
+        sans-serif;
+    line-height: 1.6;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #07071a;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* ── Design tokens ── */
+    --primary: #ffffff;
+    --secondary: #d1d5db;
+    --accent: #9ca3af;
+    --background: #000000;
+    --card: rgba(255, 255, 255, 0.04);
+    --muted-foreground: rgba(255, 255, 255, 0.62);
+    --foreground: rgba(255, 255, 255, 0.95);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #000;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+::selection {
+    background: rgba(255, 255, 255, 0.28);
+    color: #000;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+/* ══════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+══════════════════════════════════════════ */
+
+/* Orbit — used by OrbitingCircles */
+@keyframes orbit {
+    from {
+        transform: rotate(0deg) translateX(calc(var(--radius) * 1px))
+            rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(calc(var(--radius) * 1px))
+            rotate(-360deg);
+    }
+}
+
+.animate-orbit {
+    animation: orbit calc(var(--duration) * 1s) linear infinite;
+}
+
+/* Border Beam — used by BorderBeam */
+@keyframes border-beam {
+    100% {
+        offset-distance: 100%;
+    }
+}
+
+/* Meteor — used by Meteors */
+@keyframes meteor {
+    0% {
+        transform: rotate(215deg) translateX(0);
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(215deg) translateX(-700px);
+        opacity: 0;
+    }
+}
+
+/* Shimmer — used by ShinyButton */
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 3s linear infinite;
+}
+
+/* Gradient — used by GradientText */
+@keyframes gradient-animate {
+    0%,
+    100% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 100% center;
+    }
+}
+
+.animate-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: gradient-animate 8s linear infinite;
+}
+
+/* Pulse slow */
+@keyframes pulse-slow {
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* Grid scroll */
+@keyframes grid {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(60px);
+    }
+}
+
+.animate-grid {
+    animation: grid 15s linear infinite;
+}
+
+/* Fade in up — general utility */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* Spin */
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+}
+
+/* Blink cursor */
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.animate-blink {
+    animation: blink 1s step-end infinite;
+}
+
+/* ══════════════════════════════════════════
+   SCROLL PROGRESS BAR
+══════════════════════════════════════════ */
+
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, #ffffff, #e5e7eb, #9ca3af);
+    transform-origin: left;
+    z-index: 9998;
+    border-radius: 0 2px 2px 0;
+}
+
+/* ══════════════════════════════════════════
+   MINI UTILITY HELPERS
+   (used by components that were written for Tailwind)
+══════════════════════════════════════════ */
+
+.font-mono {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+}
+
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.select-none {
+    user-select: none;
+}
+
+.transform-gpu {
+    transform: translateZ(0);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* ══════════════════════════════════════════
+   GLOW UTILITIES
+══════════════════════════════════════════ */
+
+.glow-primary {
+    box-shadow:
+        0 0 20px rgba(99, 102, 241, 0.4),
+        0 0 40px rgba(99, 102, 241, 0.2);
+}
+
+.glow-secondary {
+    box-shadow:
+        0 0 20px rgba(168, 85, 247, 0.4),
+        0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+.text-glow-primary {
+    text-shadow:
+        0 0 20px rgba(99, 102, 241, 0.6),
+        0 0 40px rgba(99, 102, 241, 0.3);
+}

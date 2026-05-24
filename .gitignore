@@ -1,0 +1,47 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Local/generated environments
+.venv/
+
+# Private portfolio materials
+Resume/
+Certifications/
+Paper/
+Hackathon images/
+public/resume/
+public/certifications/
+public/previews/resume.png
+public/previews/cert-*.png
+dist/resume/
+dist/certifications/
+dist/previews/resume.png
+dist/previews/cert-*.png
+
+# Extraction outputs and scratch files
+output.json
+task.txt
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.vercel

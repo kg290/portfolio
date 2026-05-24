@@ -1,0 +1,13 @@
+@keyframes gradient-animate {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+.gradient-text-anim {
+  display: inline-block;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: gradient-animate 8s linear infinite;
+}

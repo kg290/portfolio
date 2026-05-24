@@ -1,0 +1,90 @@
+.gooey-nav-container {
+  position: fixed;
+  top: 92px;
+  bottom: 22px;
+  left: 16px;
+  width: 144px;
+  z-index: 1000;
+}
+
+.gooey-nav-container nav {
+  height: 100%;
+}
+
+.gooey-nav-container nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.gooey-nav-container nav ul li {
+  margin: 0;
+}
+
+.gooey-nav-container nav ul li a {
+  display: inline-block;
+  padding: 2px 0 2px 10px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  border-left: 1px solid transparent;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.gooey-nav-container nav ul li a:hover {
+  color: rgba(255, 255, 255, 0.92);
+  border-left-color: rgba(255, 255, 255, 0.5);
+  transform: translateX(1px);
+}
+
+.gooey-nav-container nav ul li.active a {
+  color: #fff;
+  border-left-color: #fff;
+  font-weight: 900;
+}
+
+@media (max-width: 1180px) {
+  .gooey-nav-container {
+    top: 88px;
+    bottom: 20px;
+    left: 10px;
+    width: 128px;
+  }
+
+  .gooey-nav-container nav ul li a {
+    padding: 2px 0 2px 8px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gooey-nav-container {
+    top: 82px;
+    bottom: 14px;
+    left: 6px;
+    width: 108px;
+  }
+
+  .gooey-nav-container nav ul li a {
+    font-size: 12px;
+    padding-left: 6px;
+  }
+}
+
+@media (max-width: 900px) {
+  .gooey-nav-container {
+    display: none;
+  }
+}
+
