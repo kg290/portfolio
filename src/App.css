@@ -142,6 +142,51 @@
     cursor: pointer;
 }
 
+.resume-download-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.resume-menu {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    width: max-content;
+    min-width: 230px;
+    transform: translateX(-50%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.94);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+    padding: 6px;
+    display: grid;
+    gap: 4px;
+    z-index: 20;
+}
+
+.resume-menu-link {
+    color: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    border-radius: 7px;
+    padding: 10px 12px;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.resume-menu-link:hover,
+.resume-menu-link:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    outline: none;
+}
+
 .hero-socials {
     display: flex;
     gap: 7px;
@@ -1338,6 +1383,19 @@
     .hero-cta .star-border-container,
     .hero-cta .inner-content {
         width: 100%;
+    }
+
+    .resume-download-wrap,
+    .resume-download-wrap > * {
+        width: 100%;
+    }
+
+    .resume-menu {
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-width: 0;
+        transform: none;
     }
 
     .hero-cta .inner-content {

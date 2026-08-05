@@ -23,6 +23,9 @@ export default function ScrollStack({ items = [] }) {
               className="scroll-stack-card"
             >
               <div className="scroll-stack-head">
+                <span className="scroll-stack-tab">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
                 <h3>{project.title}</h3>
                 <FaExternalLinkAlt size={14} />
               </div>

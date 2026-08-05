@@ -23,7 +23,7 @@ const COMMANDS = {
 ║                    KARNAJEET GOSAVI                      ║
 ║                    AI/ML ENGINEER                        ║
 ╠══════════════════════════════════════════════════════════╣
-║  B.Tech CSE @ VIT Pune | CGPA: 8.96/10                  ║
+║  B.Tech CSE @ VIT Pune | CGPA: 8.98/10                  ║
 ║                                                          ║
 ║  Focus:                                                  ║
 ║  • Applied AI systems and production-ready ML pipelines ║
@@ -62,6 +62,14 @@ const COMMANDS = {
 │  3. Real-Time GPU Visualization & Sonification           │
 │     GPU-accelerated fractal exploration engine           │
 │     Tech: GPU, Visualization, Audio, Realtime Systems    │
+│                                                          │
+│  4. SAP CI Technical Specification Generator             │
+│     iFlow parser -> tech spec .docx + diagrams           │
+│     Tech: Python, SAP CPI, BPMN/XML, Gemini API          │
+│                                                          │
+│  5. Anti-Fingerprint Instruction Shuffler (AFIS)         │
+│     Compiler-backend code diversification toolkit        │
+│     Tech: C++17, Compilers, CFG Analysis, IR             │
 │                                                          │
 │  Visit: github.com/kg290                                 │
 └──────────────────────────────────────────────────────────┘`,

@@ -78,11 +78,11 @@ function randomPos(cx, cy, mag, w, h) {
 }
 
 const INTRO_TEXT = "Hello";
-const SHOW_DURATION_MS = 2500;
-const DISPERSE_DURATION_MS = 900;
-const MIN_SKIP_DELAY_MS = 2200;
-const BASE_PIXEL_STEP = 6;
-const LOW_POWER_PIXEL_STEP = 8;
+const SHOW_DURATION_MS = 1700;
+const DISPERSE_DURATION_MS = 650;
+const MIN_SKIP_DELAY_MS = 1500;
+const BASE_PIXEL_STEP = 7;
+const LOW_POWER_PIXEL_STEP = 9;
 
 function resolvePixelStep() {
   const cores = navigator.hardwareConcurrency || 4;
@@ -107,9 +107,9 @@ export default function ParticleTextPreloader({ onComplete }) {
     const W = Math.min(vw, 1200);
     const H = Math.floor(W * ratio);
     const pixelStep = resolvePixelStep();
-    const maxParticles = pixelStep >= LOW_POWER_PIXEL_STEP ? 2300 : 4200;
+    const maxParticles = pixelStep >= LOW_POWER_PIXEL_STEP ? 1600 : 2600;
     cvs.width = W; cvs.height = H;
-    const ctx = cvs.getContext("2d");
+    const ctx = cvs.getContext("2d", { alpha: false });
     if (!ctx) return;
     const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 

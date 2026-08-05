@@ -222,7 +222,7 @@ function App() {
                           <span className="text-white font-semibold">AI/ML Engineer</span> specializing in LLMs, NLP, and Agentic AI
                         </p>
                         <p className="text-sm text-white/50 max-w-xl mt-2">
-                          Published researcher • CGPA: 8.96/10 • VIT Pune
+                          Published researcher • CGPA: 8.98/10 • VIT Pune
                         </p>
                       </BlurFade>
                     </div>

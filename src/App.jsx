@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 
 import TargetCursor from "./components/TargetCursor/TargetCursor";
 import StaggeredMenu from "./components/StaggeredMenu/StaggeredMenu";
@@ -37,7 +38,7 @@ import {
 
 import "./App.css";
 
-const AVATAR_URL = "/sleeve.png";
+const AVATAR_URL = "/profile-picture.jpg";
 
 const NAV_ITEMS = [
   { label: "Home", link: "#hero" },
@@ -47,7 +48,18 @@ const NAV_ITEMS = [
   { label: "Contact", link: "#contact" },
 ];
 
-const RESUME_LINK = "/resume/latest-resume.pdf";
+const RESUME_OPTIONS = [
+  {
+    label: "Full Stack Resume",
+    href: "/resume/Karnajeet_Gosavi_Full_Stack_Resume.pdf",
+  },
+  {
+    label: "Agentic Python Resume",
+    href: "/resume/Karnajeet_Gosavi_Agentic_Python_Resume.pdf",
+  },
+];
+
+const RESUME_LINK = RESUME_OPTIONS[0].href;
 
 const MENU_ITEMS = [
   { label: "Download Resume", link: RESUME_LINK },
@@ -65,54 +77,86 @@ const CONTRIBUTION_SNAKE_URL =
   "https://raw.githubusercontent.com/kg290/kg290/output/github-contribution-grid-snake-dark.svg";
 
 const STATS = [
-  { value: 8.96, suffix: "/10", label: "CGPA", decimalPlaces: 2 },
+  { value: 8.98, suffix: "/10", label: "CGPA", decimalPlaces: 2 },
   { value: 3, suffix: "", label: "Publications", decimalPlaces: 0 },
   { value: 3, suffix: "", label: "Certifications", decimalPlaces: 0 },
 ];
 
 const SKILL_CATEGORIES = [
   {
-    title: "Programming and CS",
+    title: "Programming",
     icon: <FaCogs size={15} />,
     items: [
-      "Python",
-      "C/C++",
-      "Java",
+      "JavaScript",
       "TypeScript",
-      "Data Structures",
-      "Algorithms",
-      "OOP",
-      "System Design",
+      "Python",
+      "Java",
+      "C++",
+      "C#",
+      "PowerShell 7",
     ],
   },
   {
-    title: "AI and ML",
+    title: "Frontend",
     icon: <FaServer size={15} />,
     items: [
-      "Deep Learning",
-      "Generative AI",
-      "NLP",
-      "Computer Vision",
-      "PyTorch",
-      "TensorFlow",
-      "LangChain",
-      "LlamaIndex",
+      "React.js",
+      "Next.js",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "GSAP",
+      "Three.js",
+      "D3.js",
+      "Recharts",
     ],
   },
   {
-    title: "Cloud and Engineering",
-    icon: <FaDatabase size={15} />,
+    title: "Backend",
+    icon: <FaServer size={15} />,
     items: [
       "FastAPI",
-      "AWS",
-      "Docker",
-      "Kubernetes",
-      "Linux",
-      "Git",
-      "GitHub",
-      "MongoDB",
+      "Flask",
+      "Django",
+      "Express.js",
+      "ASP.NET Core",
+      "Spring Boot",
+      "REST APIs",
+      "GraphQL API Design",
+      "JWT",
+    ],
+  },
+  {
+    title: "Databases",
+    icon: <FaDatabase size={15} />,
+    items: [
       "PostgreSQL",
-      "MLOps",
+      "MySQL",
+      "MongoDB",
+      "Redis",
+      "SQLAlchemy",
+    ],
+  },
+  {
+    title: "DevOps/Cloud",
+    icon: <FaCogs size={15} />,
+    items: [
+      "Git",
+      "Docker",
+      "AWS",
+      "GCP",
+      "Azure",
+      "Vercel",
+      "GitLab",
+    ],
+  },
+  {
+    title: "OS",
+    icon: <FaServer size={15} />,
+    items: [
+      "Windows Server",
+      "Kali Linux",
+      "Ubuntu",
     ],
   },
 ];
@@ -140,6 +184,20 @@ const PROJECTS = [
       "GPU-accelerated fractal explorer with real-time visual and audio rendering pipeline.",
     tech: ["GPU", "Visualization", "Audio", "Realtime Systems"],
     link: "https://github.com/kg290",
+  },
+  {
+    title: "SAP CI Technical Specification Generator",
+    description:
+      "Parses SAP CPI integration flow projects (iFlow BPMN/XML) from ZIPs or folders, resolves externalized parameters, and generates formatted technical specification .docx documents plus sender, receiver, and exception-flow diagrams, with Gemini AI summaries and deterministic fallback content.",
+    tech: ["Python", "SAP CPI", "BPMN/XML", "Gemini API", "python-docx"],
+    link: "https://github.com/kg290/SAP-CI-Technical-Specification-Generator",
+  },
+  {
+    title: "Anti-Fingerprint Instruction Shuffler (AFIS)",
+    description:
+      "C++17 compiler-backend toolkit for code diversification of three-address IR: dependency-safe instruction shuffling, CFG-aware block reordering, register renaming, fingerprint metrics, and runtime semantic equivalence verification.",
+    tech: ["C++17", "Compilers", "CFG Analysis", "IR Optimization", "CLI"],
+    link: "https://github.com/kg290/anti-fingerprint-instruction-shuffler",
   },
 ];
 
@@ -183,14 +241,8 @@ const CERTIFICATIONS = [
   },
 ];
 
-const RESUME_PREVIEW = {
-  image: "/previews/resume.png",
-  title: "Karnajeet Gosavi — Resume",
-  subtitle: "AI/ML Engineer · B.Tech CSE · VIT Pune",
-};
-
 const ABOUT_PARAGRAPHS = [
-  "I am Karnajeet Gosavi, a B.Tech Computer Science student at VIT Pune (2023-2027) with a CGPA of 8.96, focused on applied AI/ML engineering.",
+  "I am Karnajeet Gosavi, a B.Tech Computer Science student at VIT Pune (2023-2027) with a CGPA of 8.98, focused on applied AI/ML engineering.",
   "My work centers on production-minded AI systems: NLP pipelines, computer vision models, and reliable API services that are designed to be measurable, maintainable, and deployment-ready.",
   "I hold two Oracle Cloud Infrastructure certifications (Generative AI Professional and Observability Professional) and the IBM DevOps and Software Engineering Professional Certificate.",
 ];
@@ -210,7 +262,9 @@ const HACKATHON_HIGHLIGHTS = [
 function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
+  const [isResumeMenuOpen, setIsResumeMenuOpen] = useState(false);
   const sectionsRef = useRef([]);
+  const resumeMenuRef = useRef(null);
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -264,6 +318,30 @@ function App() {
       window.removeEventListener("resize", onScrollOrResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isResumeMenuOpen) return;
+
+    const closeOnOutsideClick = (event) => {
+      if (!resumeMenuRef.current?.contains(event.target)) {
+        setIsResumeMenuOpen(false);
+      }
+    };
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setIsResumeMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isResumeMenuOpen]);
 
   const scrollTo = (id) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
@@ -319,7 +397,7 @@ function App() {
 
             <div className="hero-tagline-row">
               <p className="hero-tagline">
-                AI/ML Engineer | B.Tech CSE at VIT Pune | CGPA 8.96
+                AI/ML Engineer | B.Tech CSE at VIT Pune | CGPA 8.98
               </p>
 
               <div className="hero-socials hero-socials-inline">
@@ -389,20 +467,41 @@ function App() {
                 </StarBorder>
               </MagneticButton>
 
-              <HoverPreviewTrigger preview={RESUME_PREVIEW}>
+              <div className="resume-download-wrap" ref={resumeMenuRef}>
                 <MagneticButton strength={24}>
                   <StarBorder
                     as="button"
                     color="#ffffff"
                     speed="6s"
                     className="cta-btn"
-                    onClick={() => window.open(RESUME_LINK, "_blank", "noopener,noreferrer")}
+                    type="button"
+                    aria-haspopup="menu"
+                    aria-expanded={isResumeMenuOpen}
+                    onClick={() => setIsResumeMenuOpen((open) => !open)}
                   >
                     <FaDownload style={{ marginRight: 8 }} />
                     Download Resume
                   </StarBorder>
                 </MagneticButton>
-              </HoverPreviewTrigger>
+
+                {isResumeMenuOpen && (
+                  <div className="resume-menu" role="menu" aria-label="Resume downloads">
+                    {RESUME_OPTIONS.map((resume) => (
+                      <a
+                        key={resume.href}
+                        className="resume-menu-link"
+                        href={resume.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        role="menuitem"
+                        onClick={() => setIsResumeMenuOpen(false)}
+                      >
+                        {resume.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </FadeIn>
 
@@ -522,7 +621,7 @@ function App() {
             <BlurFade delay={0.1} inView>
               <h2 className="section-title">Projects</h2>
               <p className="section-lead">
-                Scroll stack layout with one-by-one project flow.
+                Scroll to stack each project on top of the last, like tabs.
               </p>
             </BlurFade>
 
@@ -532,7 +631,7 @@ function App() {
 
         <div className="spline-sidebar">
           <div className="spline-sticky-inner">
-            <SplineDecor />
+            {isIntroComplete && <SplineDecor />}
           </div>
         </div>
       </div>
@@ -567,7 +666,7 @@ function App() {
                   rel="noopener noreferrer"
                   className="achievement-image-item"
                 >
-                  <img src={photo.image} alt={`${photo.title} Hackathon`} />
+                  <img src={photo.image} alt={`${photo.title} Hackathon`} loading="lazy" decoding="async" />
                   <span>{photo.title}</span>
                 </a>
               ))}
@@ -669,6 +768,7 @@ function App() {
           <p>&copy; {new Date().getFullYear()} Karnajeet Gosavi. All rights reserved.</p>
         </footer>
       </div>
+      <Analytics />
       </HoverPreviewProvider>
     </>
   );

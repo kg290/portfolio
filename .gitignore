@@ -20,7 +20,10 @@ Resume/
 Certifications/
 Paper/
 Hackathon images/
-public/resume/
+public/resume/*
+!public/resume/
+!public/resume/Karnajeet_Gosavi_Full_Stack_Resume.pdf
+!public/resume/Karnajeet_Gosavi_Agentic_Python_Resume.pdf
 public/certifications/
 public/previews/resume.png
 public/previews/cert-*.png

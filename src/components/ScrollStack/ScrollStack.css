@@ -2,55 +2,37 @@
   width: min(100%, 900px);
   margin: 0;
   padding-top: 4px;
-  padding-bottom: 3vh;
+  padding-bottom: 6vh;
 }
 
+/* Each item is sticky directly under the tall list container and stops
+   --tab offset lower than the previous one, so covered cards leave a
+   visible strip at the top that reads like a row of stacked tabs. */
 .scroll-stack-item {
-  position: relative;
-  height: 64vh;
+  position: sticky;
+  top: calc(102px + var(--stack-index) * 30px);
+  z-index: calc(30 + var(--stack-index));
 }
 
 .scroll-stack-item + .scroll-stack-item {
-  margin-top: -8vh;
+  margin-top: 26px;
 }
 
 .scroll-stack-card {
-  position: sticky;
-  top: 108px;
-  z-index: calc(30 + var(--stack-index));
   display: block;
-  min-height: clamp(250px, 38vh, 320px);
+  min-height: clamp(240px, 34vh, 310px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 14px;
   background: linear-gradient(
     180deg,
-    rgba(30, 30, 30, 0.96) 0%,
-    rgba(10, 10, 10, 0.96) 100%
+    rgba(30, 30, 30, 0.97) 0%,
+    rgba(10, 10, 10, 0.97) 100%
   );
   text-decoration: none;
   color: inherit;
   padding: 20px 20px 18px;
-  transform: translateY(calc(var(--stack-index) * 14px))
-    scale(calc(1 - var(--stack-index) * 0.045));
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
+  box-shadow: 0 -14px 34px rgba(0, 0, 0, 0.55);
   overflow: hidden;
-  will-change: transform;
-}
-
-.scroll-stack-card::before,
-.scroll-stack-card::after {
-  display: none;
-}
-
-.scroll-stack-card::before {
-  transform: translateY(-16px) scale(0.985);
-  opacity: 0.45;
-}
-
-.scroll-stack-card::after {
-  transform: translateY(-30px) scale(0.968);
-  opacity: 0.3;
 }
 
 .scroll-stack-head {
@@ -61,12 +43,27 @@
   margin-bottom: 12px;
 }
 
+.scroll-stack-tab {
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px 8px 3px 3px;
+  border-bottom-style: dashed;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 5px 8px;
+  margin-top: 2px;
+}
+
 .scroll-stack-head h3 {
   margin: 0;
+  flex: 1;
   color: #fff;
   font-size: clamp(21px, 3vw, 30px);
   line-height: 1.24;
-  max-width: 90%;
 }
 
 .scroll-stack-head svg {
@@ -108,7 +105,8 @@
   }
 
   .scroll-stack-item {
-    height: auto;
+    position: relative;
+    top: auto;
   }
 
   .scroll-stack-item + .scroll-stack-item {
@@ -116,15 +114,12 @@
   }
 
   .scroll-stack-card {
-    position: relative;
-    top: auto;
     min-height: 0;
     padding: 15px;
-    transform: none;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
   }
 
   .scroll-stack-head h3 {
-    max-width: 100%;
     font-size: clamp(19px, 5.8vw, 24px);
   }
 

@@ -59,7 +59,7 @@ def parse_resume(text):
         resume["education"].append({
             "institution": "Vishwakarma Institute of Technology, Pune",
             "degree": "B.Tech in Computer Science Engineering",
-            "cgpa": "8.96/10",
+            "cgpa": "8.98/10",
             "duration": "July 2023 – June 2027"
         })
     
