@@ -99,19 +99,6 @@ Contact
 - Hackathon finalist and qualification highlights
 - Oracle Cloud Infrastructure and IBM professional certifications
 
-## Screenshots
-
-<table>
-  <tr>
-    <td align="center"><strong>Project preview</strong></td>
-    <td align="center"><strong>Research preview</strong></td>
-  </tr>
-  <tr>
-    <td><img src="githubimages/offroad.png" alt="Offroad terrain segmentation project" width="440" /></td>
-    <td><img src="githubimages/narrative.png" alt="Narrative consistency verification project" width="440" /></td>
-  </tr>
-</table>
-
 ## Architecture
 
 ```text
