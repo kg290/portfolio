@@ -156,7 +156,7 @@ const SKILL_CATEGORIES = [
 const TALLY = [
   { value: "8.98", unit: "/10", label: "CGPA at VIT Pune" },
   { value: "60+", unit: "", label: "merged open-source pull requests" },
-  { value: "3", unit: "", label: "research papers published" },
+  { value: "5", unit: "", label: "research papers published" },
   { value: "2", unit: "", label: "national-level hackathons won" },
 ];
 
