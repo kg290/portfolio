@@ -333,3 +333,16 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 .contact .contact-form-field input, .contact .contact-form-field textarea { border-color: color-mix(in oklab, var(--color-light) 18%, transparent); background: color-mix(in oklab, var(--color-shade) 45%, transparent); transition: border-color var(--dur-short) var(--ease-out); }
 .contact .contact-form-field input:hover, .contact .contact-form-field textarea:hover, .contact .contact-form-field input:focus-visible, .contact .contact-form-field textarea:focus-visible { border-color: var(--color-accent); }
 .contact .contact-form-submit { min-width: 180px; }
+
+/* Contact: the head sits in its own glass card, as tall as the form, so its type never lies on the bright sky. */
+.contact__head { align-content: start; grid-template-rows: auto auto 1fr auto; padding: var(--space-xl); border-radius: var(--radius-card); background: color-mix(in oklab, var(--color-shade) 42%, transparent); -webkit-backdrop-filter: blur(8px) saturate(1.25); backdrop-filter: blur(8px) saturate(1.25); box-shadow: var(--glass-hi); }
+.contact__head > p:has(.contact-email-link) { align-self: end; }
+.contact__form { display: grid; }
+.contact .contact-form-shell { align-content: start; }
+@media (min-width: 60.0625rem) {
+  .contact__grid { align-items: stretch; }
+  .contact__form { grid-column: 6 / span 7; }
+}
+@media (max-width: 40rem) {
+  .contact__head { padding: var(--space-lg); }
+}
