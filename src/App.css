@@ -304,3 +304,6 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .nav, .nav__links a::before, .cursor span, .spot::before, .btn, .nav__links a, .now__socials a, .work__list button, .work__list button::before, .pane, .shot, .resume-menu-link { transition: none; }
 }
+
+/* The section above already leaves a full gap; a second one on top of it read as empty space. */
+#achievements, #contact { padding-top: 0; }
