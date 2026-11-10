@@ -35,7 +35,7 @@ h3 { font-size: var(--text-title); line-height: 1.15; }
 /* Hero: the hour */
 .hero { position: relative; z-index: var(--z-base); display: grid; align-items: center; min-height: 100svh; overflow: clip; color: var(--color-ink); }
 /* A shade from the left carries the light type; the right of the frame stays clear for the photograph. */
-.hero__scrim { position: absolute; inset: 0; background: linear-gradient(to right, color-mix(in oklab, var(--color-shade) 72%, transparent), color-mix(in oklab, var(--color-shade) 34%, transparent) 52%, transparent 78%); }
+.hero__scrim { position: absolute; inset: 0; }
 .hero h1 { font-size: clamp(2.75rem, 5.2vw + 1rem, 6rem); line-height: 1; }
 .hero .line { display: block; }
 .hero__grid { position: relative; z-index: var(--z-base); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap-columns); align-items: center; padding-block: var(--space-4xl) var(--space-3xl); }
@@ -171,7 +171,7 @@ h3 { font-size: var(--text-title); line-height: 1.15; }
 .scene__shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; filter: contrast(1.04) saturate(1.03); }
 /* Later shots wait closed; the script opens each one with its own cut as its chapter arrives. */
 .scene__shot:not(:first-child) { object-position: 50% 50%; opacity: 0; }
-.scene__grade { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, transparent 40%, color-mix(in oklab, var(--color-shade) 60%, transparent)); }
+.scene__grade { position: absolute; inset: 0; }
 
 /* Content rides over the scene on clear smoked glass, thin enough to watch the scene change through it. */
 .panel { padding-block: var(--space-2xl); border-radius: var(--radius-card); background: color-mix(in oklab, var(--color-shade) 46%, transparent); -webkit-backdrop-filter: blur(6px) saturate(1.25); backdrop-filter: blur(6px) saturate(1.25); box-shadow: var(--glass-hi); color: var(--color-ink); }
@@ -217,7 +217,6 @@ h3 { font-size: var(--text-title); line-height: 1.15; }
   .nav__links { display: none; }
   .hero__grid { row-gap: var(--space-xl); padding-block: var(--space-4xl) var(--space-2xl); }
   .hero__text, .now, .split__head, .rows, .work__side, .work__panes, .about__text, .about__portrait, .stack__rows, .contact__head, .contact__form, .record__block > h3, .record__block > :not(h3) { grid-column: 1 / -1; }
-  .hero__scrim { background: color-mix(in oklab, var(--color-shade) 52%, transparent); }
   .about__portrait { max-width: 420px; }
   .seq__stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .seq__item:nth-child(odd) { padding-left: 0; border-left: 0; }
