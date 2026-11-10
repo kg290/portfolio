@@ -301,6 +301,7 @@ const HACKATHON_HIGHLIGHTS = [
 
 function App() {
   const [isResumeMenuOpen, setIsResumeMenuOpen] = useState(false);
+  const [resumeMenuUp, setResumeMenuUp] = useState(false);
   const resumeMenuRef = useRef(null);
 
   useCinematics();
@@ -406,14 +407,18 @@ function App() {
                     className="btn btn--ghost"
                     aria-haspopup="menu"
                     aria-expanded={isResumeMenuOpen}
-                    onClick={() => setIsResumeMenuOpen((open) => !open)}
+                    onClick={(event) => {
+                      // Opens upward only when the menu (about 170px) would run off the bottom of the screen.
+                      setResumeMenuUp(window.innerHeight - event.currentTarget.getBoundingClientRect().bottom < 170);
+                      setIsResumeMenuOpen((open) => !open);
+                    }}
                   >
                     <FaDownload aria-hidden="true" />
                     Download Resume
                   </button>
 
                   {isResumeMenuOpen && (
-                    <div className="resume-menu" role="menu" aria-label="Resume downloads">
+                    <div className={`resume-menu${resumeMenuUp ? " resume-menu--up" : ""}`} role="menu" aria-label="Resume downloads">
                       {RESUME_OPTIONS.map((resume) => (
                         <a
                           key={resume.href}

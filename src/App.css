@@ -347,5 +347,5 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
   .contact__head { padding: var(--space-lg); }
 }
 
-/* The resume menu opens upward: below the button it ran off the bottom of the first screen. */
-.resume-menu { top: auto; bottom: calc(100% + var(--space-xs)); }
+/* The resume menu opens upward when there is no room below the button. */
+.resume-menu--up { top: auto; bottom: calc(100% + var(--space-xs)); }
