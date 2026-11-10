@@ -43,7 +43,7 @@ const LINKEDIN = "https://www.linkedin.com/in/karnajeet-gosavi";
 const SCENES = [
   "/hero/hills-1920.jpg",
   "/hero/dunes-1920.jpg",
-  "/hero/bridge-1920.jpg",
+  "/hero/lake-1920.jpg",
   "/hero/stars-1280.jpg",
   "/hero/dusk-shore-1920.jpg",
 ];
@@ -53,7 +53,7 @@ const CREDITS = [
   { name: "Thomas Bresson", license: "CC BY 3.0", href: COMMONS + "Vallee-brouillard.jpg" },
   { name: "Caleb Riston", license: "CC0", href: COMMONS + "PalouseFromSteptoeButteMay2023-1.jpg" },
   { name: "BLM Utah, Bob Wick", license: "public domain", href: COMMONS + "Utah_Dunes_Landscape_-_West_Desert_District.jpg" },
-  { name: "Steven Lek", license: "CC BY-SA 4.0", href: COMMONS + "Erasmusbrug_Rotterdam_night_2018.jpg" },
+  { name: "Tobias Alt", license: "CC BY-SA 4.0", href: COMMONS + "Peyto_Lake-Banff_NP-Canada.jpg" },
   {
     name: "Giles Laurent",
     license: "CC BY-SA 4.0",
