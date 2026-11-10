@@ -44,7 +44,7 @@ const SCENES = [
   "/hero/hills-1920.jpg",
   "/hero/dunes-1920.jpg",
   "/hero/lake-1920.jpg",
-  "/hero/stars-1280.jpg",
+  "/hero/field-1920.jpg",
   "/hero/dusk-shore-1920.jpg",
 ];
 
@@ -54,11 +54,7 @@ const CREDITS = [
   { name: "Caleb Riston", license: "CC0", href: COMMONS + "PalouseFromSteptoeButteMay2023-1.jpg" },
   { name: "BLM Utah, Bob Wick", license: "public domain", href: COMMONS + "Utah_Dunes_Landscape_-_West_Desert_District.jpg" },
   { name: "Tobias Alt", license: "CC BY-SA 4.0", href: COMMONS + "Peyto_Lake-Banff_NP-Canada.jpg" },
-  {
-    name: "Giles Laurent",
-    license: "CC BY-SA 4.0",
-    href: COMMONS + "018_Human_looking_at_the_stars_during_Perseids_with_the_Milky_Way_in_the_background_Photo_by_Giles_Laurent.jpg",
-  },
+  { name: "sagesolar", license: "CC BY 4.0", href: COMMONS + "Rapeseed_field_near_South_Harting_(55536076893).jpg" },
   { name: "Matt Harrop", license: "CC BY-SA 2.0", href: COMMONS + "Conwy_Estuary_at_dusk_-_geograph.org.uk_-_4556293.jpg" },
 ];
 
