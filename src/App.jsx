@@ -1,204 +1,163 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
+import { FaDownload, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
 
-import TargetCursor from "./components/TargetCursor/TargetCursor";
-import StaggeredMenu from "./components/StaggeredMenu/StaggeredMenu";
-import GooeyNav from "./components/GooeyNav/GooeyNav";
-
-import BlurFade, {
-  FadeIn,
-  StaggerContainer,
-  StaggerItem,
-} from "./components/BlurFade/BlurFade";
-import { TextRevealByChar } from "./components/TextReveal/TextReveal";
-
-import Terminal from "./components/Terminal/Terminal";
-import ProfileCard from "./components/ProfileCard/ProfileCard";
-import ScrollStack from "./components/ScrollStack/ScrollStack";
-import NumberCounter from "./components/NumberCounter/NumberCounter";
-import StarBorder from "./components/StarBorder/StarBorder";
-import MagneticButton from "./components/MagneticButton/MagneticButton";
-import Meteors from "./components/Meteors/Meteors";
 import ContactForm from "./components/ContactForm/ContactForm";
-import ParticleTextPreloader from "./components/ParticleTextEffect/ParticleTextEffect";
-import SplineDecor from "./components/SplineDecor/SplineDecor";
-import { HoverPreviewProvider, HoverPreviewTrigger } from "./components/HoverPreview/HoverPreview";
-
-import {
-  FaCertificate,
-  FaCogs,
-  FaDatabase,
-  FaDownload,
-  FaEnvelope,
-  FaGithub,
-  FaLinkedin,
-  FaServer,
-} from "react-icons/fa";
+import useCinematics, { scrollToId as scrollTo } from "./useCinematics";
 
 import "./App.css";
 
 const AVATAR_URL = "/profile-picture.jpg";
+const EMAIL = "karnajeet.gosavi23@vit.edu";
+const GITHUB = "https://github.com/kg290";
+const LINKEDIN = "https://www.linkedin.com/in/karnajeet-gosavi";
+
+// One photograph per chapter, in scroll order after the hero's: experience, projects, about, achievements, contact.
+const SCENES = [
+  "/hero/hills-1920.jpg",
+  "/hero/dunes-1920.jpg",
+  "/hero/bridge-1920.jpg",
+  "/hero/stars-1280.jpg",
+  "/hero/dusk-shore-1920.jpg",
+];
+
+const COMMONS = "https://commons.wikimedia.org/wiki/File:";
+const CREDITS = [
+  { name: "Thomas Bresson", license: "CC BY 3.0", href: COMMONS + "Vallee-brouillard.jpg" },
+  { name: "Caleb Riston", license: "CC0", href: COMMONS + "PalouseFromSteptoeButteMay2023-1.jpg" },
+  { name: "BLM Utah, Bob Wick", license: "public domain", href: COMMONS + "Utah_Dunes_Landscape_-_West_Desert_District.jpg" },
+  { name: "Steven Lek", license: "CC BY-SA 4.0", href: COMMONS + "Erasmusbrug_Rotterdam_night_2018.jpg" },
+  {
+    name: "Giles Laurent",
+    license: "CC BY-SA 4.0",
+    href: COMMONS + "018_Human_looking_at_the_stars_during_Perseids_with_the_Milky_Way_in_the_background_Photo_by_Giles_Laurent.jpg",
+  },
+  { name: "Matt Harrop", license: "CC BY-SA 2.0", href: COMMONS + "Conwy_Estuary_at_dusk_-_geograph.org.uk_-_4556293.jpg" },
+];
 
 const NAV_ITEMS = [
-  { label: "Home", link: "#hero" },
-  { label: "Tech Stack", link: "#skills" },
+  { label: "Experience", link: "#experience" },
   { label: "Projects", link: "#projects" },
+  { label: "About", link: "#about" },
   { label: "Achievements", link: "#achievements" },
-  { label: "Contact", link: "#contact" },
 ];
 
 const RESUME_OPTIONS = [
-  {
-    label: "Full Stack Resume",
-    href: "/resume/Karnajeet_Gosavi_Full_Stack_Resume.pdf",
-  },
-  {
-    label: "Agentic Python Resume",
-    href: "/resume/Karnajeet_Gosavi_Agentic_Python_Resume.pdf",
-  },
+  { label: "AI/ML Resume", href: "/resume/Karnajeet_Gosavi_AI_ML_Resume.pdf" },
+  { label: "Full Stack Resume", href: "/resume/Karnajeet_Gosavi_Full_Stack_Resume.pdf" },
+  { label: "Security and Systems Resume", href: "/resume/Karnajeet_Gosavi_Security_Systems_Resume.pdf" },
 ];
 
-const RESUME_LINK = RESUME_OPTIONS[0].href;
-
-const MENU_ITEMS = [
-  { label: "Download Resume", link: RESUME_LINK },
-  { label: "GitHub Profile", link: "https://github.com/kg290", external: true },
-  {
-    label: "LinkedIn",
-    link: "https://www.linkedin.com/in/karnajeet-gosavi",
-    external: true,
-  },
-  { label: "Email", link: "mailto:karnajeet.gosavi23@vit.edu", external: true },
-  { label: "View Certifications", link: "#certifications" },
+// The hero card: what is running now, as an account list.
+const NOW = [
+  { title: "Syngenta", detail: "Software Development Intern", value: "Since Apr 2026" },
+  { title: "Open source", detail: "Kornia, OpenMS and jj", value: "60+ merged PRs" },
+  { title: "Research", detail: "IEEE and Springer venues", value: "5 papers" },
+  { title: "Hackathons", detail: "National level", value: "2 wins" },
 ];
 
-const CONTRIBUTION_SNAKE_URL =
-  "https://raw.githubusercontent.com/kg290/kg290/output/github-contribution-grid-snake-dark.svg";
-
-const STATS = [
-  { value: 8.98, suffix: "/10", label: "CGPA", decimalPlaces: 2 },
-  { value: 3, suffix: "", label: "Publications", decimalPlaces: 0 },
-  { value: 3, suffix: "", label: "Certifications", decimalPlaces: 0 },
-];
-
-const SKILL_CATEGORIES = [
+const EXPERIENCE = [
   {
-    title: "Programming",
-    icon: <FaCogs size={15} />,
-    items: [
-      "JavaScript",
-      "TypeScript",
-      "Python",
-      "Java",
-      "C++",
-      "C#",
-      "PowerShell 7",
-    ],
+    org: "Syngenta",
+    role: "Software Development Intern",
+    when: "Apr 2026 to present",
+    where: "Pune, Maharashtra",
+    line: "Automated a SAP CPI documentation generator that turns 7 artifact groups into one structured DOCX, through a 4-step workflow of discovery, parsing, AI summarization and formatting.",
   },
   {
-    title: "Frontend",
-    icon: <FaServer size={15} />,
-    items: [
-      "React.js",
-      "Next.js",
-      "Vite",
-      "Tailwind CSS",
-      "Framer Motion",
-      "GSAP",
-      "Three.js",
-      "D3.js",
-      "Recharts",
-    ],
+    org: "Kornia, OpenMS and jj",
+    role: "Open Source Contributor",
+    when: "Sep 2026 to present",
+    where: "Remote",
+    line: "60+ merged pull requests across PyTorch computer vision, C++ mass spectrometry and a Rust version control system: bug fixes, numerical stability patches and new API features.",
   },
   {
-    title: "Backend",
-    icon: <FaServer size={15} />,
-    items: [
-      "FastAPI",
-      "Flask",
-      "Django",
-      "Express.js",
-      "ASP.NET Core",
-      "Spring Boot",
-      "REST APIs",
-      "GraphQL API Design",
-      "JWT",
-    ],
-  },
-  {
-    title: "Databases",
-    icon: <FaDatabase size={15} />,
-    items: [
-      "PostgreSQL",
-      "MySQL",
-      "MongoDB",
-      "Redis",
-      "SQLAlchemy",
-    ],
-  },
-  {
-    title: "DevOps/Cloud",
-    icon: <FaCogs size={15} />,
-    items: [
-      "Git",
-      "Docker",
-      "AWS",
-      "GCP",
-      "Azure",
-      "Vercel",
-      "GitLab",
-    ],
-  },
-  {
-    title: "OS",
-    icon: <FaServer size={15} />,
-    items: [
-      "Windows Server",
-      "Kali Linux",
-      "Ubuntu",
-    ],
+    org: "Amazon ML School 2026",
+    role: "Participant",
+    when: "Jul to Aug 2026",
+    where: "Taught live by Amazon Scientists",
+    line: "Completed an 8-module curriculum on supervised and unsupervised learning, deep neural networks, reinforcement learning and generative AI.",
   },
 ];
 
 const PROJECTS = [
   {
-    title: "Offroad Terrain Segmentation System",
+    title: "Honey Proxy Deception Firewall",
     description:
-      "Semantic segmentation system for unstructured off-road terrain using DeepLabV3+ with ResNet-101 backbone and mIoU-based evaluation.",
-    tech: ["Python", "PyTorch", "DeepLabV3+", "Computer Vision"],
-    link: "https://github.com/kg290/hack-for-green-bharat_TEAM_DDOS_ME",
-    preview: { image: "/previews/gh-offroad.png", title: "Offroad Terrain Segmentation", subtitle: "github.com/kg290/hack-for-green-bharat_TEAM_DDOS_ME" },
+      "A deception-first firewall that forwards live traffic through a Flask proxy and routes suspicious sessions into monitored honeypot flows, with a live SOC dashboard.",
+    figures: [
+      { value: "16", label: "behavioral signals scored" },
+      { value: "3", label: "Dockerized services" },
+      { value: "900ms", label: "dashboard polling" },
+    ],
+    tech: ["Python", "Flask", "React", "TypeScript", "SQLAlchemy", "Docker"],
+    link: "https://github.com/kg290/honey-proxy-deception-firewall",
   },
   {
-    title: "Narrative Consistency Verification System",
+    title: "Whistlechain",
     description:
-      "Hybrid rule-based, retrieval, and LLM reasoning pipeline for narrative consistency checks with evidence-backed outputs.",
-    tech: ["Python", "NLP", "LLMs", "Pathway RAG"],
-    link: "https://github.com/kg290/Narrative-Consistency-Verification-System",
-    preview: { image: "/previews/gh-narrative.png", title: "Narrative Consistency Verification", subtitle: "github.com/kg290/Narrative-Consistency-Verification-System" },
+      "A decentralized whistleblower protection platform on Algorand, with anonymous wallets, encrypted evidence bundles and commit-reveal verification.",
+    figures: [
+      { value: "44", label: "FastAPI routes" },
+      { value: "12", label: "backend services" },
+      { value: "964", label: "lines of PyTEAL registry" },
+    ],
+    tech: ["Python", "TypeScript", "FastAPI", "React", "Algorand SDK"],
+    link: "https://github.com/kg290/Whistlechain",
   },
   {
-    title: "Real-Time GPU Visualization and Orbit Sonification",
+    title: "InvoX Invoice Financing Platform",
     description:
-      "GPU-accelerated fractal explorer with real-time visual and audio rendering pipeline.",
-    tech: ["GPU", "Visualization", "Audio", "Realtime Systems"],
-    link: "https://github.com/kg290",
+      "A full-stack invoice financing marketplace for vendors, lenders and admins, with Razorpay payments and invoice intake over OCR, Gmail and Telegram.",
+    figures: [
+      { value: "21", label: "Next.js pages" },
+      { value: "22", label: "FastAPI route modules" },
+      { value: "26", label: "SQLAlchemy models" },
+    ],
+    tech: ["Next.js", "React", "TypeScript", "FastAPI", "PostgreSQL", "Razorpay", "Docker"],
+    link: "https://github.com/kg290/invox-invoice-financing-platform",
   },
   {
-    title: "SAP CI Technical Specification Generator",
+    title: "Anti-Fingerprint Instruction Shuffler",
     description:
-      "Parses SAP CPI integration flow projects (iFlow BPMN/XML) from ZIPs or folders, resolves externalized parameters, and generates formatted technical specification .docx documents plus sender, receiver, and exception-flow diagrams, with Gemini AI summaries and deterministic fallback content.",
-    tech: ["Python", "SAP CPI", "BPMN/XML", "Gemini API", "python-docx"],
-    link: "https://github.com/kg290/SAP-CI-Technical-Specification-Generator",
-  },
-  {
-    title: "Anti-Fingerprint Instruction Shuffler (AFIS)",
-    description:
-      "C++17 compiler-backend toolkit for code diversification of three-address IR: dependency-safe instruction shuffling, CFG-aware block reordering, register renaming, fingerprint metrics, and runtime semantic equivalence verification.",
-    tech: ["C++17", "Compilers", "CFG Analysis", "IR Optimization", "CLI"],
+      "A C++17 compiler-backend pipeline that diversifies three-address IR by shuffling instructions, reordering blocks and renaming registers, then verifies the variants behave the same.",
+    figures: [
+      { value: "22", label: "equivalence checks passed" },
+      { value: "0", label: "failed" },
+      { value: "54", label: "files in the pipeline" },
+    ],
+    tech: ["C++17", "Compiler Backend", "Register Renaming", "Security"],
     link: "https://github.com/kg290/anti-fingerprint-instruction-shuffler",
   },
+  {
+    title: "Offroad Semantic Scene Segmentation",
+    description:
+      "Pixel-wise segmentation of synthetic desert terrain with DeepLabV3+ on a ResNet-101 backbone, trained in two phases over 50 epochs with test-time augmentation.",
+    figures: [
+      { value: "0.65", label: "mIoU on the 7 present classes" },
+      { value: "4,176", label: "images" },
+      { value: "10", label: "semantic classes" },
+    ],
+    tech: ["Python", "PyTorch", "DeepLabV3+", "ResNet-101", "CUDA"],
+    link: "https://github.com/kg290/Offroad-Semantic-Scene-Segmentation",
+  },
+];
+
+const MARQUEE = ["Syngenta", "Kornia", "OpenMS", "jj", "Amazon ML School", "IEEE", "VIT Pune"];
+
+const SKILL_CATEGORIES = [
+  { title: "Programming", items: ["Python", "TypeScript", "JavaScript", "Java", "C++"] },
+  { title: "Frontend", items: ["React.js", "Next.js", "Flutter"] },
+  { title: "Backend", items: ["Node.js", "Django", "Spring Boot", "REST API Development"] },
+  { title: "Databases", items: ["PostgreSQL", "MySQL", "MongoDB", "Redis"] },
+  { title: "Cloud and DevOps", items: ["AWS (EC2, S3, Lambda)", "GCP", "Docker Compose"] },
+];
+
+const TALLY = [
+  { value: "8.98", unit: "/10", label: "CGPA at VIT Pune" },
+  { value: "60+", unit: "", label: "merged open-source pull requests" },
+  { value: "3", unit: "", label: "research papers published" },
+  { value: "2", unit: "", label: "national-level hackathons won" },
 ];
 
 const PUBLICATIONS = [
@@ -206,20 +165,17 @@ const PUBLICATIONS = [
     title: "ML Algorithm Benchmarking for Weather Prediction Across India",
     venue: "ICCPCT 2024 (IEEE)",
     link: "https://ieeexplore.ieee.org/document/10673211/",
-    preview: { image: "/previews/pub-weather.png", title: "ML Algorithm Benchmarking for Weather Prediction", subtitle: "IEEE ICCPCT 2024" },
   },
   {
     title: "Smart Retail Shelf for Effective Inventory Management",
     venue: "RTET 2024 (The Grenze)",
     link: "https://thegrenze.com/index.php?display=page&view=journalabstract&absid=4066&id=8",
-    preview: { image: "/previews/pub-retail.png", title: "Smart Retail Shelf for Inventory Management", subtitle: "The Grenze RTET 2024" },
   },
   {
     title:
       "Perspective-Powered Personalized News Aggregator: Multi-Dimensional News Analysis and Adaptation",
     venue: "ICONAT 2025 (IEEE)",
     link: "https://ieeexplore.ieee.org/document/11362604/",
-    preview: { image: "/previews/pub-news.png", title: "Personalized News Aggregator", subtitle: "IEEE ICONAT 2025" },
   },
 ];
 
@@ -227,24 +183,20 @@ const CERTIFICATIONS = [
   {
     title: "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
     link: "/certifications/generative-ai.pdf",
-    preview: { image: "/previews/cert-genai.png", title: "OCI Generative AI Professional", subtitle: "Oracle Cloud Infrastructure 2025" },
   },
   {
     title: "Oracle Cloud Infrastructure 2025 Certified Observability Professional",
     link: "/certifications/cloudobsproff.pdf",
-    preview: { image: "/previews/cert-obs.png", title: "OCI Observability Professional", subtitle: "Oracle Cloud Infrastructure 2025" },
   },
   {
     title: "IBM DevOps and Software Engineering Professional Certificate",
     link: "/certifications/md3121.pdf",
-    preview: { image: "/previews/cert-devops.png", title: "DevOps & Software Engineering", subtitle: "IBM Professional Certificate" },
   },
 ];
 
 const ABOUT_PARAGRAPHS = [
   "I am Karnajeet Gosavi, a B.Tech Computer Science student at VIT Pune (2023-2027) with a CGPA of 8.98, focused on applied AI/ML engineering.",
   "My work centers on production-minded AI systems: NLP pipelines, computer vision models, and reliable API services that are designed to be measurable, maintainable, and deployment-ready.",
-  "I hold two Oracle Cloud Infrastructure certifications (Generative AI Professional and Observability Professional) and the IBM DevOps and Software Engineering Professional Certificate.",
 ];
 
 const HACKATHON_PHOTOS = [
@@ -260,64 +212,10 @@ const HACKATHON_HIGHLIGHTS = [
 ];
 
 function App() {
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
-  const [activeSection, setActiveSection] = useState(0);
   const [isResumeMenuOpen, setIsResumeMenuOpen] = useState(false);
-  const sectionsRef = useRef([]);
   const resumeMenuRef = useRef(null);
 
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  useEffect(() => {
-    const sections = sectionsRef.current.filter(Boolean);
-    if (!sections.length) return;
-
-    let rafId = 0;
-
-    const updateActiveSection = () => {
-      const anchorY = window.innerHeight * 0.28;
-      let bestIndex = 0;
-      let bestDistance = Number.POSITIVE_INFINITY;
-
-      sections.forEach((section, idx) => {
-        const rect = section.getBoundingClientRect();
-
-        if (rect.top <= anchorY && rect.bottom >= anchorY) {
-          bestIndex = idx;
-          bestDistance = 0;
-          return;
-        }
-
-        const distance = Math.abs(rect.top - anchorY);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          bestIndex = idx;
-        }
-      });
-
-      setActiveSection((prev) => (prev === bestIndex ? prev : bestIndex));
-    };
-
-    const onScrollOrResize = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(updateActiveSection);
-    };
-
-    updateActiveSection();
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
-    };
-  }, []);
+  useCinematics();
 
   useEffect(() => {
     if (!isResumeMenuOpen) return;
@@ -343,433 +241,428 @@ function App() {
     };
   }, [isResumeMenuOpen]);
 
-  const scrollTo = (id) => {
-    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <>
-      <HoverPreviewProvider>
-      {!isIntroComplete && (
-        <ParticleTextPreloader
-          onComplete={() => setIsIntroComplete(true)}
-        />
-      )}
+      <div className="scene" aria-hidden="true">
+        <div className="scene__cam">
+          <img
+            className="scene__shot"
+            src="/hero/dusk-1920.jpg"
+            srcSet="/hero/dusk-960.jpg 960w, /hero/dusk-1920.jpg 1920w"
+            sizes="100vw"
+            width="1920"
+            height="1254"
+            alt=""
+            fetchPriority="high"
+          />
+          {SCENES.map((src) => (
+            <img key={src} className="scene__shot" src={src} alt="" decoding="async" />
+          ))}
+        </div>
+        <div className="scene__grade" />
+      </div>
 
-      <div className="app">
-        <motion.div className="scroll-progress-bar" style={{ scaleX }} />
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
 
-        <div className="background-layer" />
+      <header className="nav">
+        <div className="nav__bar glass">
+          <a className="nav__mark" href="#hero" aria-label="Karnajeet Gosavi, back to top">
+            Karnajeet Gosavi
+          </a>
+          <nav aria-label="Sections">
+            <ul className="nav__links">
+              {NAV_ITEMS.map((item) => (
+                <li key={item.link}>
+                  <a href={item.link}>{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <a className="btn btn--small" href="#contact">
+            Contact
+          </a>
+          <span className="nav__progress" aria-hidden="true" />
+        </div>
+      </header>
 
-      <TargetCursor targetSelector="button, a, .cursor-target, .cta-btn, .nav-card-link, .sm-panel-item, .star-border-container, .contact-anchor, .menu__item-link, .terminal-wrapper, .hero-flashcard, .scroll-stack-card" />
+      <main id="main" className="day">
+        <section id="hero" className="hero">
+          <div className="hero__scrim" aria-hidden="true" />
 
-      <StaggeredMenu
-        items={MENU_ITEMS}
-        displaySocials={false}
-        displayItemNumbering={false}
-        colors={["#000000", "#171717"]}
-        accentColor="#ffffff"
-        menuButtonColor="#ffffff"
-        openMenuButtonColor="#ffffff"
-        isFixed
-        closeOnClickAway
-      />
-
-      <GooeyNav
-        items={NAV_ITEMS.map((item) => ({ label: item.label, href: item.link }))}
-        initialActiveIndex={activeSection}
-      />
-
-      <section
-        id="hero"
-        className="section hero-section"
-        ref={(el) => (sectionsRef.current[0] = el)}
-      >
-        <div className="hero-content">
-          <FadeIn direction="right" className="hero-left" delay={0.1}>
-            <p className="hero-greeting">Portfolio</p>
-
-            <h1 className="hero-name">
-              <TextRevealByChar delay={0.1} duration={0.04} staggerChildren={0.02}>
-                Karnajeet Gosavi
-              </TextRevealByChar>
-            </h1>
-
-            <div className="hero-tagline-row">
-              <p className="hero-tagline">
-                AI/ML Engineer | B.Tech CSE at VIT Pune | CGPA 8.98
+          <div className="container hero__grid">
+            <div className="hero__text">
+              <h1>
+                <span className="line">Karnajeet Gosavi</span> <span className="line">builds systems</span>{" "}
+                <span className="line">that ship.</span>
+              </h1>
+              <p className="lead">
+                Software Development Intern at Syngenta, B.Tech CSE student at VIT Pune.
               </p>
 
-              <div className="hero-socials hero-socials-inline">
-                <a
-                  href="https://github.com/kg290"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hero-social-link"
-                  aria-label="GitHub"
-                >
-                  <FaGithub size={16} />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/karnajeet-gosavi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hero-social-link"
-                  aria-label="LinkedIn"
-                >
-                  <FaLinkedin size={16} />
-                </a>
-                <a
-                  href="mailto:karnajeet.gosavi23@vit.edu"
-                  className="hero-social-link"
-                  aria-label="Email"
-                >
-                  <FaEnvelope size={16} />
-                </a>
-              </div>
-            </div>
-
-            <div className="hero-terminal-inline">
-              <Terminal className="hero-terminal" />
-            </div>
-
-            <p className="hero-summary">
-              Professional portfolio snapshot covering capabilities, selected
-              work, credentials, and ways to connect.
-            </p>
-
-            <div className="hero-kpis">
-              {STATS.map((stat, i) => (
-                <div key={stat.label} className="kpi-card">
-                  <p className="kpi-value">
-                    <NumberCounter
-                      value={stat.value}
-                      decimalPlaces={stat.decimalPlaces}
-                      suffix={stat.suffix}
-                      delay={0.2 + i * 0.08}
-                    />
-                  </p>
-                  <p className="kpi-label">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="hero-cta">
-              <MagneticButton strength={24}>
-                <StarBorder
-                  as="button"
-                  color="#ffffff"
-                  speed="6s"
-                  className="cta-btn"
-                  onClick={() => scrollTo("#projects")}
-                >
+              <div className="hero__cta">
+                <button type="button" className="btn" onClick={() => scrollTo("#projects")}>
                   View Projects
-                </StarBorder>
-              </MagneticButton>
+                </button>
 
-              <div className="resume-download-wrap" ref={resumeMenuRef}>
-                <MagneticButton strength={24}>
-                  <StarBorder
-                    as="button"
-                    color="#ffffff"
-                    speed="6s"
-                    className="cta-btn"
+                <div className="resume-download-wrap" ref={resumeMenuRef}>
+                  <button
                     type="button"
+                    className="btn btn--ghost"
                     aria-haspopup="menu"
                     aria-expanded={isResumeMenuOpen}
                     onClick={() => setIsResumeMenuOpen((open) => !open)}
                   >
-                    <FaDownload style={{ marginRight: 8 }} />
+                    <FaDownload aria-hidden="true" />
                     Download Resume
-                  </StarBorder>
-                </MagneticButton>
+                  </button>
 
-                {isResumeMenuOpen && (
-                  <div className="resume-menu" role="menu" aria-label="Resume downloads">
-                    {RESUME_OPTIONS.map((resume) => (
-                      <a
-                        key={resume.href}
-                        className="resume-menu-link"
-                        href={resume.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        role="menuitem"
-                        onClick={() => setIsResumeMenuOpen(false)}
-                      >
-                        {resume.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </FadeIn>
-
-          <FadeIn direction="left" delay={0.2} className="hero-right">
-            <div className="hero-profile-row">
-              <div className="hero-flashcard-wrap">
-                <ProfileCard
-                  className="hero-flashcard"
-                  name="Karnajeet Gosavi"
-                  title="AI/ML Engineer"
-                  handle="kg290"
-                  avatarUrl={AVATAR_URL}
-                  miniAvatarUrl={AVATAR_URL}
-                  showUserInfo={false}
-                  showDetails={false}
-                  enableTilt
-                  behindGlowEnabled
-                  behindGlowColor="rgba(255, 255, 255, 0.2)"
-                  behindGlowSize="44%"
-                  innerGradient="linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%)"
-                />
-              </div>
-
-              <div className="hero-side-column">
-                <a
-                  className="hero-snake-card"
-                  href="https://github.com/kg290"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub contribution snake"
-                >
-                  <p className="hero-snake-title">GitHub Contributions</p>
-                  <div className="hero-snake-visual">
-                    <img
-                      src={CONTRIBUTION_SNAKE_URL}
-                      alt="Contribution snake"
-                      className="hero-snake-image"
-                      loading="lazy"
-                    />
-                  </div>
-                </a>
-
-                <div id="certifications" className="hero-cert-compact">
-                  <p className="hero-cert-title">
-                    <FaCertificate size={12} />
-                    <span>Certifications</span>
-                  </p>
-                  <ol className="hero-cert-list">
-                    {CERTIFICATIONS.map((cert, index) => (
-                      <li key={cert.title} className="hero-cert-item">
-                        <HoverPreviewTrigger preview={cert.preview}>
-                          <a
-                            href={cert.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hero-cert-link"
-                          >
-                            <span className="hero-cert-index">{index + 1}.</span>
-                            <span>{cert.title}</span>
-                          </a>
-                        </HoverPreviewTrigger>
-                      </li>
-                    ))}
-                  </ol>
+                  {isResumeMenuOpen && (
+                    <div className="resume-menu" role="menu" aria-label="Resume downloads">
+                      {RESUME_OPTIONS.map((resume) => (
+                        <a
+                          key={resume.href}
+                          className="resume-menu-link"
+                          href={resume.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          role="menuitem"
+                          onClick={() => setIsResumeMenuOpen(false)}
+                        >
+                          {resume.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div id="about" className="hero-about-compact">
-              <h2>About Me</h2>
-              {ABOUT_PARAGRAPHS.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <div className="spline-scroll-region">
-        <div className="spline-scroll-content">
-          <section
-            id="skills"
-            className="section skills-section"
-            ref={(el) => (sectionsRef.current[1] = el)}
-          >
-            <BlurFade delay={0.1} inView>
-              <h2 className="section-title">Tech Stack</h2>
-              <p className="section-lead">
-                Core technologies grouped for fast recruiter scanning.
-              </p>
-            </BlurFade>
-
-            <div className="skills-panel skills-panel-full">
-              {SKILL_CATEGORIES.map((cat) => (
-                <div key={cat.title} className="hero-tech-row skills-tech-row">
-                  <p className="hero-tech-label">
-                    {cat.icon}
-                    <span>{cat.title}</span>
-                  </p>
-                  <div className="hero-tech-values">
-                    {cat.items.map((item) => (
-                      <span key={item} className="hero-tech-item">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+            <aside className="now glass" aria-label="Current work">
+              <div className="now__head">
+                <img src={AVATAR_URL} alt="" width="708" height="718" />
+                <div>
+                  <p className="now__name">Karnajeet Gosavi</p>
+                  <p className="now__place">Pune, Maharashtra</p>
                 </div>
-              ))}
-            </div>
-          </section>
+                <div className="now__socials">
+                  <a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <FaGithub size={18} aria-hidden="true" />
+                  </a>
+                  <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <FaLinkedin size={18} aria-hidden="true" />
+                  </a>
+                  <a href={`mailto:${EMAIL}`} aria-label="Email">
+                    <FaEnvelope size={18} aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
 
-          <section
-            id="projects"
-            className="section projects-section"
-            ref={(el) => (sectionsRef.current[2] = el)}
-          >
-            <BlurFade delay={0.1} inView>
-              <h2 className="section-title">Projects</h2>
-              <p className="section-lead">
-                Scroll to stack each project on top of the last, like tabs.
+              <ul className="now__rows">
+                {NOW.map((row) => (
+                  <li key={row.title}>
+                    <span className="now__initial" aria-hidden="true">
+                      {row.title[0]}
+                    </span>
+                    <span className="now__what">
+                      <b>{row.title}</b>
+                      <span>{row.detail}</span>
+                    </span>
+                    <span className="now__value num">{row.value}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="now__open">
+                <span>Open to internships and full-time roles</span>
+                <a href="#contact">Get in touch</a>
               </p>
-            </BlurFade>
-
-            <ScrollStack items={PROJECTS} />
-          </section>
-        </div>
-
-        <div className="spline-sidebar">
-          <div className="spline-sticky-inner">
-            {isIntroComplete && <SplineDecor />}
+            </aside>
           </div>
-        </div>
-      </div>
+        </section>
 
-      <section
-        id="achievements"
-        className="section achievements-section"
-        ref={(el) => (sectionsRef.current[3] = el)}
-      >
-        <BlurFade delay={0.1} inView>
-          <h2 className="section-title">Achievements</h2>
-          <p className="section-lead">
-            Compact summary of hackathon performance and publication record.
-          </p>
-        </BlurFade>
-
-        <div className="achievements-grid">
-          <div className="achievement-compact-block">
-            <h3>Hackathons</h3>
-            <ul className="achievement-compact-list">
-              {HACKATHON_HIGHLIGHTS.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-
-            <div className="achievement-image-row">
-              {HACKATHON_PHOTOS.map((photo) => (
-                <a
-                  key={photo.title}
-                  href={photo.image}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="achievement-image-item"
-                >
-                  <img src={photo.image} alt={`${photo.title} Hackathon`} loading="lazy" decoding="async" />
-                  <span>{photo.title}</span>
-                </a>
-              ))}
+        <section className="section seq night" aria-labelledby="seq-title">
+          <div className="seq__pin">
+            <div className="container">
+              <h2 id="seq-title" className="visually-hidden">
+                In numbers
+              </h2>
+              <dl className="seq__stage">
+                {TALLY.map((item) => (
+                  <div key={item.label} className="seq__item">
+                    <dt>{item.label}</dt>
+                    <dd className="num">
+                      {item.value}
+                      {item.unit && <small>{item.unit}</small>}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
+        </section>
 
-          <div className="achievement-compact-block">
-            <h3>Publications</h3>
-            <ol className="achievement-publication-list">
-              {PUBLICATIONS.map((pub) => (
-                <li key={pub.link}>
-                  <HoverPreviewTrigger preview={pub.preview}>
-                    <a href={pub.link} target="_blank" rel="noopener noreferrer">
-                      {pub.title}
-                    </a>
-                  </HoverPreviewTrigger>
-                  <span>{pub.venue}</span>
+        <section id="experience" className="section">
+          <div className="container split panel">
+            <div className="split__head" data-rise>
+              <h2>Experience</h2>
+              <p className="lead">An internship, open source and one summer school, all in 2026.</p>
+            </div>
+
+            <ol className="rows">
+              {EXPERIENCE.map((job) => (
+                <li key={job.org} className="spot" data-rise>
+                  <div className="rows__meta">
+                    <time>{job.when}</time>
+                    <span>{job.where}</span>
+                  </div>
+                  <div className="rows__body">
+                    <h3>{job.org}</h3>
+                    <p className="rows__role">{job.role}</p>
+                    <p>{job.line}</p>
+                  </div>
                 </li>
               ))}
             </ol>
           </div>
+        </section>
+
+        <div className="marquee night" aria-hidden="true">
+          {[0, 1].map((row) => (
+            <div key={row} className="marquee__row">
+              {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((name, idx) => (
+                <span key={idx}>{name}</span>
+              ))}
+            </div>
+          ))}
         </div>
-      </section>
 
-      <section
-        id="contact"
-        className="section contact-section"
-        ref={(el) => (sectionsRef.current[4] = el)}
-      >
-        <div className="meteors-container">
-          <Meteors number={10} />
-        </div>
+        <section id="projects" className="section work">
+          <div className="work__pin">
+            <div className="container work__grid panel">
+              <div className="work__side">
+                <h2 data-rise>Projects</h2>
+                <ol className="work__list">
+                  {PROJECTS.map((project, idx) => (
+                    <li key={project.title}>
+                      <button type="button" data-index={idx} aria-current={idx === 0 ? "true" : undefined}>
+                        {project.title}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
 
-        <BlurFade delay={0.1} inView>
-          <h2 className="section-title">Contact</h2>
-          <p className="contact-subtitle">
-            Open to internships, full-time roles, and project collaboration.
-          </p>
-        </BlurFade>
+              <div className="work__panes">
+                {PROJECTS.map((project, idx) => (
+                  <article key={project.title} className={`pane${idx === 0 ? " is-active" : ""}`}>
+                    <h3>{project.title}</h3>
+                    <p className="lead">{project.description}</p>
 
-        <ContactForm />
+                    <dl className="pane__figures">
+                      {project.figures.map((figure) => (
+                        <div key={figure.label}>
+                          <dt>{figure.label}</dt>
+                          <dd className="num">{figure.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
 
-        <StaggerContainer className="contact-links" staggerDelay={0.1}>
-          <StaggerItem>
-            <a
-              href="https://github.com/kg290"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-anchor"
-            >
-              <MagneticButton strength={20}>
-                <StarBorder as="div" color="#ffffff" speed="5s">
-                  <span className="contact-link-inner">
-                    <FaGithub size={18} /> GitHub
+                    <div className="pane__foot">
+                      <ul className="tags">
+                        {project.tech.map((tech) => (
+                          <li key={tech}>{tech}</li>
+                        ))}
+                      </ul>
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn--ghost"
+                      >
+                        <FaGithub aria-hidden="true" />
+                        View on GitHub
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="section">
+          <div className="container about panel">
+            <div className="about__text">
+              <h2 className="visually-hidden">About Me</h2>
+              <p className="statement">
+                {ABOUT_PARAGRAPHS[0].split(" ").map((word, idx) => (
+                  <span className="w" key={idx}>
+                    {word}{" "}
                   </span>
-                </StarBorder>
-              </MagneticButton>
-            </a>
-          </StaggerItem>
+                ))}
+              </p>
+              <p className="lead" data-rise>
+                {ABOUT_PARAGRAPHS[1]}
+              </p>
+            </div>
 
-          <StaggerItem>
-            <a
-              href="https://www.linkedin.com/in/karnajeet-gosavi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-anchor"
-            >
-              <MagneticButton strength={20}>
-                <StarBorder as="div" color="#ffffff" speed="6s">
-                  <span className="contact-link-inner">
-                    <FaLinkedin size={18} /> LinkedIn
-                  </span>
-                </StarBorder>
-              </MagneticButton>
-            </a>
-          </StaggerItem>
+            <figure className="about__portrait" data-clip>
+              <img
+                src={AVATAR_URL}
+                alt="Karnajeet Gosavi"
+                width="708"
+                height="718"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
 
-          <StaggerItem>
-            <a href="mailto:karnajeet.gosavi23@vit.edu" className="contact-anchor">
-              <MagneticButton strength={20}>
-                <StarBorder as="div" color="#ffffff" speed="7s">
-                  <span className="contact-link-inner">
-                    <FaEnvelope size={18} /> Email
-                  </span>
-                </StarBorder>
-              </MagneticButton>
-            </a>
-          </StaggerItem>
-        </StaggerContainer>
+          <div id="skills" className="container split stack panel">
+            <div className="split__head" data-rise>
+              <h2>Tech Stack</h2>
+            </div>
+            <dl className="stack__rows">
+              {SKILL_CATEGORIES.map((cat) => (
+                <div key={cat.title} data-rise>
+                  <dt>{cat.title}</dt>
+                  <dd>{cat.items.join(", ")}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
-        <p className="contact-email-line">
-          <a href="mailto:karnajeet.gosavi23@vit.edu" className="contact-email-link">
-            karnajeet.gosavi23@vit.edu
-          </a>
-        </p>
-      </section>
+        <section id="achievements" className="section">
+          <div className="container record panel">
+            <div className="record__head" data-rise>
+              <h2>Achievements</h2>
+              <p className="lead">
+                Technical and Associate Secretary of MLSC and the Student Development Club, 2025.
+              </p>
+            </div>
 
-        <footer className="footer">
+            <div className="record__block">
+              <h3 data-rise>Publications</h3>
+              <ol className="links">
+                {PUBLICATIONS.map((pub) => (
+                  <li key={pub.link} data-rise>
+                    <a href={pub.link} target="_blank" rel="noopener noreferrer" data-cursor="Read paper">
+                      {pub.title}
+                    </a>
+                    <span>{pub.venue}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="record__block">
+              <h3 data-rise>Hackathons</h3>
+              <ul className="highlights" data-rise>
+                {HACKATHON_HIGHLIGHTS.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <div className="shots">
+                {HACKATHON_PHOTOS.map((photo) => (
+                  <a
+                    key={photo.title}
+                    href={photo.image}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shot"
+                    data-cursor="View photo"
+                    data-rise
+                  >
+                    <span className="shot__frame" data-clip>
+                      <img
+                        src={photo.image}
+                        alt={`${photo.title} Hackathon`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                    <span>{photo.title}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div id="certifications" className="record__block">
+              <h3 data-rise>Certifications</h3>
+              <ol className="links">
+                {CERTIFICATIONS.map((cert) => (
+                  <li key={cert.title} data-rise>
+                    <a href={cert.link} target="_blank" rel="noopener noreferrer" data-cursor="Open PDF">
+                      {cert.title}
+                    </a>
+                    <span>PDF</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" className="section contact night">
+          <div className="contact__scrim" aria-hidden="true" />
+          <div className="container contact__grid">
+            <div className="contact__head">
+              <h2 data-rise>Contact</h2>
+              <p className="lead" data-rise>
+                Open to internships, full-time roles, and project collaboration.
+              </p>
+
+              <p data-rise>
+                <a href={`mailto:${EMAIL}`} className="contact-email-link">
+                  {EMAIL}
+                </a>
+              </p>
+
+              <div className="contact__links" data-rise>
+                <a href={GITHUB} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
+                  <FaGithub aria-hidden="true" /> GitHub
+                </a>
+                <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
+                  <FaLinkedin aria-hidden="true" /> LinkedIn
+                </a>
+              </div>
+            </div>
+
+            <div className="contact__form" data-rise>
+              <ContactForm />
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <div className="container footer__grid">
+          <p className="footer__mark">Karnajeet Gosavi</p>
           <p>&copy; {new Date().getFullYear()} Karnajeet Gosavi. All rights reserved.</p>
-        </footer>
+          <p data-credits>
+            Photographs:{" "}
+            {CREDITS.map((credit, idx) => (
+              <span key={credit.href}>
+                {idx > 0 && ", "}
+                <a href={credit.href} target="_blank" rel="noopener noreferrer">
+                  {credit.name}
+                </a>{" "}
+                ({credit.license})
+              </span>
+            ))}
+            , Wikimedia Commons
+          </p>
+        </div>
+      </footer>
+
+      <div className="cursor" aria-hidden="true">
+        <span />
       </div>
+
       <Analytics />
-      </HoverPreviewProvider>
     </>
   );
 }

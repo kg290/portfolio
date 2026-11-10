@@ -160,10 +160,10 @@ export default function ContactForm() {
 
           <button
             type="submit"
-            className="contact-form-submit"
+            className="btn contact-form-submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            {isSubmitting ? "Sending…" : "Send Message"}
           </button>
         </div>
 
