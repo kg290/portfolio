@@ -386,9 +386,10 @@ function App() {
 
           <div className="container hero__grid">
             <div className="hero__text">
+              <p className="eyebrow">AI/ML Engineer</p>
               <h1>
                 <span className="line">Karnajeet Gosavi</span> <span className="line">builds systems</span>{" "}
-                <span className="line">that ship.</span>
+                <span className="line line--accent">that ship.</span>
               </h1>
               <p className="lead">
                 Software Development Intern at Syngenta, B.Tech CSE student at VIT Pune.
@@ -468,7 +469,7 @@ function App() {
               </ul>
 
               <p className="now__open">
-                <span>Open to internships and full-time roles</span>
+                <span className="now__status">Open to internships and full-time roles</span>
                 <a href="#contact">Get in touch</a>
               </p>
             </aside>

@@ -75,7 +75,7 @@ export default function ContactForm() {
 
       setStatus({
         type: "success",
-        text: "Message saved successfully in backend database.",
+        text: "Message sent. Thank you.",
       });
 
       setFormValues(INITIAL_FORM);
@@ -94,9 +94,9 @@ export default function ContactForm() {
   return (
     <div className="contact-form-shell">
       <div className="contact-form-head">
-        <h3 className="contact-form-title">Send A Message</h3>
+        <h3 className="contact-form-title">Send a message</h3>
         <p className="contact-form-subtitle">
-          Share your details and context. This is stored securely in backend.
+          Tell me about the role, project or idea.
         </p>
       </div>
 
@@ -168,7 +168,7 @@ export default function ContactForm() {
         </div>
 
         {status.type !== "idle" && (
-          <p className={`contact-form-status ${status.type}`}>{status.text}</p>
+          <p className={`contact-form-status ${status.type}`} role="status">{status.text}</p>
         )}
       </form>
     </div>

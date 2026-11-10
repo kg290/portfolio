@@ -98,7 +98,9 @@ h3 { font-size: var(--text-title); line-height: 1.15; }
 .work__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap-columns); row-gap: var(--space-2xl); align-items: start; }
 .work__side { grid-column: 1 / span 4; display: grid; gap: var(--space-xl); }
 .work__side h2 { display: grid; gap: var(--space-md); }
-.work__side h2::before { content: "SELECTED WORK"; color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; }
+.contact__head h2::before { content: "GET IN TOUCH"; }
+.work__side h2::before { content: "SELECTED WORK"; }
+.work__side h2::before, .contact__head h2::before { color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; }
 .work__list { display: none; counter-reset: project; border-bottom: 1px solid var(--color-rule); }
 .work__list li { counter-increment: project; }
 .work__list button { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; align-items: center; gap: var(--space-sm); width: 100%; min-height: 64px; padding: 0 var(--space-sm); border: 0; border-top: 1px solid var(--color-rule); border-left: 2px solid transparent; background: transparent; color: var(--color-ink-2); font: 500 var(--text-md)/1.3 var(--font-body); text-align: left; cursor: pointer; transition: color var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out); }
@@ -312,10 +314,22 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 .links--cards li { position: relative; grid-template-rows: auto 1fr auto; align-content: stretch; gap: var(--space-sm); transition: box-shadow var(--dur-short) var(--ease-out); }
 .links--cards a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-card); }
 .links--cards li:hover, .links--cards li:focus-within { box-shadow: var(--glass-hi), inset 0 0 0 1px color-mix(in oklab, var(--color-accent-2) 45%, transparent); }
-.record .eyebrow { color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; }
+.eyebrow, .links .eyebrow { color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; }
 .links--cards .cert__open { font-weight: 600; color: var(--color-accent-2); }
 .links--cards .cert__open b { display: inline-block; font-weight: inherit; transition: transform var(--dur-short) var(--ease-out); }
 .links--cards li:hover .cert__open b { transform: translate(3px, -3px); }
 
 /* Hackathons: each standing is a label over its events as tags. */
 .highlights > li { display: grid; align-content: start; gap: var(--space-sm); }
+
+/* Hero: the closing line of the headline takes the apricot, and a dot marks the open status. */
+.hero .line--accent { color: var(--color-accent-2); }
+.now__status { display: inline-flex; align-items: center; gap: var(--space-xs); }
+.now__status::before { content: ""; flex-shrink: 0; width: var(--space-xs); height: var(--space-xs); border-radius: 50%; background: var(--color-accent-2); box-shadow: 0 0 0 var(--space-2xs) color-mix(in oklab, var(--color-accent-2) 28%, transparent); }
+
+/* Contact: the form is the same clear glass as the other cards, with see-through fields. */
+.contact__head h2 { display: grid; gap: var(--space-md); }
+.contact .contact-form-shell { background: color-mix(in oklab, var(--color-shade) 42%, transparent); -webkit-backdrop-filter: blur(8px) saturate(1.25); backdrop-filter: blur(8px) saturate(1.25); box-shadow: var(--glass-hi); }
+.contact .contact-form-field input, .contact .contact-form-field textarea { border-color: color-mix(in oklab, var(--color-light) 18%, transparent); background: color-mix(in oklab, var(--color-shade) 45%, transparent); transition: border-color var(--dur-short) var(--ease-out); }
+.contact .contact-form-field input:hover, .contact .contact-form-field textarea:hover, .contact .contact-form-field input:focus-visible, .contact .contact-form-field textarea:focus-visible { border-color: var(--color-accent); }
+.contact .contact-form-submit { min-width: 180px; }
