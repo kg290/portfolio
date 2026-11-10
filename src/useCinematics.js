@@ -42,6 +42,26 @@ function splitChars(el) {
   return { chars, restore: () => { el.textContent = text; el.removeAttribute("aria-label"); } };
 }
 
+// Counts a figure up from zero, keeping its unit and separators ("4,176", "900ms", "0.65").
+function countUp(el) {
+  const text = (el.dataset.value ??= el.textContent);
+  const match = /^([\d.,]+)(.*)$/.exec(text);
+  if (!match) return;
+  const [, digits, unit] = match;
+  const decimals = (digits.split(".")[1] || "").length;
+  const state = { v: 0 };
+  gsap.to(state, {
+    v: parseFloat(digits.replace(/,/g, "")),
+    duration: 0.9,
+    ease: "power2.out",
+    onUpdate: () => {
+      const n = state.v.toFixed(decimals);
+      el.textContent = (digits.includes(",") ? Number(n).toLocaleString("en-US") : n) + unit;
+    },
+    onComplete: () => { el.textContent = text; },
+  });
+}
+
 // Everything that moves with the scroll on any screen.
 function buildScroll() {
   const undo = [];
@@ -59,17 +79,50 @@ function buildScroll() {
   const cuts = [
     ["#experience", "circle(0% at 50% 62%)", "circle(150% at 50% 62%)"],
     ["#projects", "inset(0% 100% 0% 0%)", "inset(0% 0% 0% 0%)"],
-    ["#about", "polygon(0% 0%, 0% 0%, -40% 100%, -40% 100%)", "polygon(0% 0%, 140% 0%, 100% 100%, -40% 100%)"],
+    ["#skills", "polygon(0% 0%, 0% 0%, -40% 100%, -40% 100%)", "polygon(0% 0%, 140% 0%, 100% 100%, -40% 100%)"],
     ["#achievements", "circle(0% at 50% 100%)", "circle(150% at 50% 100%)"],
     ["#contact", "inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
   ];
+  // Only the shot on screen and the one cutting in are drawn: a shot still closed, or fully covered by the next, is hidden.
+  const open = shots.map(() => 0);
+  const cull = () =>
+    shots.forEach((shot, i) => {
+      shot.style.visibility = (i > 0 && open[i] === 0) || open[i + 1] === 1 ? "hidden" : "";
+    });
+  undo.push(() => shots.forEach((shot) => (shot.style.visibility = "")));
   cuts.forEach(([trigger, from, to], i) => {
     gsap.set(shots[i + 1], { opacity: 1 });
     gsap.fromTo(
       shots[i + 1],
       { clipPath: from },
-      { clipPath: to, ease: "none", scrollTrigger: { trigger, start: "top bottom", end: "top 20%", scrub: 0.6 } },
+      {
+        clipPath: to,
+        ease: "none",
+        scrollTrigger: { trigger, start: "top bottom", end: "top 20%", scrub: 0.6 },
+        onUpdate() {
+          open[i + 1] = this.progress();
+          cull();
+        },
+      },
     );
+  });
+  cull();
+
+  // The timeline's line draws itself down the experience as it scrolls past.
+  gsap.fromTo(
+    ".timeline__rail span",
+    { scaleY: 0 },
+    { scaleY: 1, ease: "none", scrollTrigger: { trigger: ".timeline", start: "top 70%", end: "bottom 60%", scrub: true } },
+  );
+
+  // The nav lights the link of the chapter on screen.
+  gsap.utils.toArray(".nav__links a").forEach((link) => {
+    ScrollTrigger.create({
+      trigger: link.getAttribute("href"),
+      start: "top 50%",
+      end: "bottom 50%",
+      onToggle: (self) => (self.isActive ? link.setAttribute("aria-current", "true") : link.removeAttribute("aria-current")),
+    });
   });
 
   // The nav steps aside on the way down and returns on the way up.
@@ -206,6 +259,7 @@ function buildPinned() {
     active = idx;
     buttons.forEach((b, i) => (i === idx ? b.setAttribute("aria-current", "true") : b.removeAttribute("aria-current")));
     panes.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+    panes[idx].querySelectorAll(".pane__figures dd").forEach(countUp);
   };
 
   const st = ScrollTrigger.create({

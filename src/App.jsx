@@ -1,6 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
-import { FaDownload, FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaAws, FaDownload, FaEnvelope, FaGithub, FaJava, FaLinkedin } from "react-icons/fa";
+import {
+  SiCplusplus,
+  SiDjango,
+  SiDocker,
+  SiFastapi,
+  SiFlutter,
+  SiGooglecloud,
+  SiJavascript,
+  SiMongodb,
+  SiMysql,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPostgresql,
+  SiPython,
+  SiPytorch,
+  SiReact,
+  SiRedis,
+  SiSpringboot,
+  SiTypescript,
+} from "react-icons/si";
+
+// React Bits (reactbits.dev), copied in as source.
+import ClickSpark from "./components/ClickSpark/ClickSpark";
+import ElectricBorder from "./components/ElectricBorder/ElectricBorder";
+import GlareHover from "./components/GlareHover/GlareHover";
+import LogoLoop from "./components/LogoLoop/LogoLoop";
+import SpotlightCard from "./components/SpotlightCard/SpotlightCard";
 
 import ContactForm from "./components/ContactForm/ContactForm";
 import useCinematics, { scrollToId as scrollTo } from "./useCinematics";
@@ -36,9 +63,9 @@ const CREDITS = [
 ];
 
 const NAV_ITEMS = [
+  { label: "About", link: "#about" },
   { label: "Experience", link: "#experience" },
   { label: "Projects", link: "#projects" },
-  { label: "About", link: "#about" },
   { label: "Achievements", link: "#achievements" },
 ];
 
@@ -62,6 +89,8 @@ const EXPERIENCE = [
     role: "Software Development Intern",
     when: "Apr 2026 to present",
     where: "Pune, Maharashtra",
+    now: true,
+    points: ["7 artifact groups", "5 integration layers", "4-step workflow", "80 text artifacts a package"],
     line: "Automated a SAP CPI documentation generator that turns 7 artifact groups into one structured DOCX, through a 4-step workflow of discovery, parsing, AI summarization and formatting.",
   },
   {
@@ -69,6 +98,8 @@ const EXPERIENCE = [
     role: "Open Source Contributor",
     when: "Sep 2026 to present",
     where: "Remote",
+    now: true,
+    points: ["60+ merged pull requests", "3 repositories", "Python, C++ and Rust"],
     line: "60+ merged pull requests across PyTorch computer vision, C++ mass spectrometry and a Rust version control system: bug fixes, numerical stability patches and new API features.",
   },
   {
@@ -76,6 +107,7 @@ const EXPERIENCE = [
     role: "Participant",
     when: "Jul to Aug 2026",
     where: "Taught live by Amazon Scientists",
+    points: ["8 modules", "Jul 1 to Aug 1, 2026"],
     line: "Completed an 8-module curriculum on supervised and unsupervised learning, deep neural networks, reinforcement learning and generative AI.",
   },
 ];
@@ -145,6 +177,59 @@ const PROJECTS = [
 
 const MARQUEE = ["Syngenta", "Kornia", "OpenMS", "jj", "Amazon ML School", "IEEE", "VIT Pune"];
 
+const LOGOS = [
+  [<SiPython />, "Python"],
+  [<SiTypescript />, "TypeScript"],
+  [<SiJavascript />, "JavaScript"],
+  [<FaJava />, "Java"],
+  [<SiCplusplus />, "C++"],
+  [<SiPytorch />, "PyTorch"],
+  [<SiReact />, "React"],
+  [<SiNextdotjs />, "Next.js"],
+  [<SiFlutter />, "Flutter"],
+  [<SiNodedotjs />, "Node.js"],
+  [<SiDjango />, "Django"],
+  [<SiFastapi />, "FastAPI"],
+  [<SiSpringboot />, "Spring Boot"],
+  [<SiPostgresql />, "PostgreSQL"],
+  [<SiMysql />, "MySQL"],
+  [<SiMongodb />, "MongoDB"],
+  [<SiRedis />, "Redis"],
+  [<FaAws />, "AWS"],
+  [<SiGooglecloud />, "GCP"],
+  [<SiDocker />, "Docker"],
+].map(([node, title]) => ({ node, title }));
+
+// The WebGL and canvas components need plain rgb values, so a theme token is painted to one pixel and read back.
+function token(name) {
+  const ctx = document.createElement("canvas").getContext("2d");
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue(name);
+  ctx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+const TECH_ICON = {
+  Python: <SiPython />,
+  TypeScript: <SiTypescript />,
+  JavaScript: <SiJavascript />,
+  Java: <FaJava />,
+  "C++": <SiCplusplus />,
+  "React.js": <SiReact />,
+  "Next.js": <SiNextdotjs />,
+  Flutter: <SiFlutter />,
+  "Node.js": <SiNodedotjs />,
+  Django: <SiDjango />,
+  "Spring Boot": <SiSpringboot />,
+  PostgreSQL: <SiPostgresql />,
+  MySQL: <SiMysql />,
+  MongoDB: <SiMongodb />,
+  Redis: <SiRedis />,
+  "AWS (EC2, S3, Lambda)": <FaAws />,
+  GCP: <SiGooglecloud />,
+  "Docker Compose": <SiDocker />,
+};
+
 const SKILL_CATEGORIES = [
   { title: "Programming", items: ["Python", "TypeScript", "JavaScript", "Java", "C++"] },
   { title: "Frontend", items: ["React.js", "Next.js", "Flutter"] },
@@ -200,9 +285,9 @@ const ABOUT_PARAGRAPHS = [
 ];
 
 const HACKATHON_PHOTOS = [
-  { title: "Innerve X", image: "/Innerve%20X.jpg" },
-  { title: "Morpheus", image: "/Morpheus.jpg" },
-  { title: "Rift 2026", image: "/rift.jpg" },
+  { title: "Innerve X", image: "/Innerve%20X.jpg", thumb: "/thumbs/innerve-x.jpg" },
+  { title: "Morpheus", image: "/Morpheus.jpg", thumb: "/thumbs/morpheus.jpg" },
+  { title: "Rift 2026", image: "/rift.jpg", thumb: "/thumbs/rift.jpg" },
 ];
 
 const HACKATHON_HIGHLIGHTS = [
@@ -216,6 +301,11 @@ function App() {
   const resumeMenuRef = useRef(null);
 
   useCinematics();
+
+  const [{ apricot, periwinkle }] = useState(() => ({
+    apricot: token("--color-accent-2"),
+    periwinkle: token("--color-accent"),
+  }));
 
   useEffect(() => {
     if (!isResumeMenuOpen) return;
@@ -242,7 +332,7 @@ function App() {
   }, [isResumeMenuOpen]);
 
   return (
-    <>
+    <ClickSpark sparkColor={apricot} sparkCount={10} sparkRadius={28} sparkSize={12}>
       <div className="scene" aria-hidden="true">
         <div className="scene__cam">
           <img
@@ -256,7 +346,7 @@ function App() {
             fetchPriority="high"
           />
           {SCENES.map((src) => (
-            <img key={src} className="scene__shot" src={src} alt="" decoding="async" />
+            <img key={src} className="scene__shot" src={src} alt="" decoding="async" fetchPriority="low" />
           ))}
         </div>
         <div className="scene__grade" />
@@ -382,6 +472,35 @@ function App() {
           </div>
         </section>
 
+        <section id="about" className="section">
+          <div className="container about panel">
+            <div className="about__text">
+              <h2 className="visually-hidden">About Me</h2>
+              <p className="statement">
+                {ABOUT_PARAGRAPHS[0].split(" ").map((word, idx) => (
+                  <span className="w" key={idx}>
+                    {word}{" "}
+                  </span>
+                ))}
+              </p>
+              <p className="lead" data-rise>
+                {ABOUT_PARAGRAPHS[1]}
+              </p>
+            </div>
+
+            <figure className="about__portrait" data-clip>
+              <img
+                src={AVATAR_URL}
+                alt="Karnajeet Gosavi"
+                width="708"
+                height="718"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
+        </section>
+
         <section className="section seq night" aria-labelledby="seq-title">
           <div className="seq__pin">
             <div className="container">
@@ -410,21 +529,32 @@ function App() {
               <p className="lead">An internship, open source and one summer school, all in 2026.</p>
             </div>
 
-            <ol className="rows">
-              {EXPERIENCE.map((job) => (
-                <li key={job.org} className="spot" data-rise>
-                  <div className="rows__meta">
-                    <time>{job.when}</time>
-                    <span>{job.where}</span>
-                  </div>
-                  <div className="rows__body">
-                    <h3>{job.org}</h3>
-                    <p className="rows__role">{job.role}</p>
-                    <p>{job.line}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <div className="timeline">
+              <div className="timeline__rail" aria-hidden="true">
+                <span />
+              </div>
+              <ol className="rows">
+                {EXPERIENCE.map((job) => (
+                  <li key={job.org} className={`spot${job.now ? " is-now" : ""}`} data-rise>
+                    <div className="rows__meta">
+                      <time>{job.when}</time>
+                      <span>{job.where}</span>
+                      {job.now && <span className="rows__now">Current</span>}
+                    </div>
+                    <div className="rows__body">
+                      <h3>{job.org}</h3>
+                      <p className="rows__role">{job.role}</p>
+                      <p>{job.line}</p>
+                      <ul className="tags">
+                        {job.points.map((point) => (
+                          <li key={point}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
@@ -454,9 +584,25 @@ function App() {
                 </ol>
               </div>
 
+              <ElectricBorder
+                className="work__frame"
+                color={apricot}
+                borderRadius={18}
+                thickness={1}
+                glow={0.3}
+                intensity={0.55}
+                chaos={0.35}
+                speed={0.7}
+              >
               <div className="work__panes">
                 {PROJECTS.map((project, idx) => (
-                  <article key={project.title} className={`pane${idx === 0 ? " is-active" : ""}`}>
+                  <SpotlightCard
+                    key={project.title}
+                    className={`pane${idx === 0 ? " is-active" : ""}`}
+                    spotlightColor={periwinkle}
+                    intensity={0.22}
+                    spotlightSize={320}
+                  >
                     <h3>{project.title}</h3>
                     <p className="lead">{project.description}</p>
 
@@ -485,42 +631,16 @@ function App() {
                         View on GitHub
                       </a>
                     </div>
-                  </article>
+                  </SpotlightCard>
                 ))}
               </div>
+              </ElectricBorder>
             </div>
           </div>
         </section>
 
-        <section id="about" className="section">
-          <div className="container about panel">
-            <div className="about__text">
-              <h2 className="visually-hidden">About Me</h2>
-              <p className="statement">
-                {ABOUT_PARAGRAPHS[0].split(" ").map((word, idx) => (
-                  <span className="w" key={idx}>
-                    {word}{" "}
-                  </span>
-                ))}
-              </p>
-              <p className="lead" data-rise>
-                {ABOUT_PARAGRAPHS[1]}
-              </p>
-            </div>
-
-            <figure className="about__portrait" data-clip>
-              <img
-                src={AVATAR_URL}
-                alt="Karnajeet Gosavi"
-                width="708"
-                height="718"
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
-          </div>
-
-          <div id="skills" className="container split stack panel">
+        <section id="skills" className="section">
+          <div className="container split stack panel">
             <div className="split__head" data-rise>
               <h2>Tech Stack</h2>
             </div>
@@ -528,10 +648,30 @@ function App() {
               {SKILL_CATEGORIES.map((cat) => (
                 <div key={cat.title} data-rise>
                   <dt>{cat.title}</dt>
-                  <dd>{cat.items.join(", ")}</dd>
+                  <dd>
+                    <ul className="chips">
+                      {cat.items.map((item) => (
+                        <li key={item}>
+                          {TECH_ICON[item]}
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </dd>
                 </div>
               ))}
             </dl>
+          </div>
+          <div className="stack__loop" data-rise>
+            <LogoLoop
+              logos={LOGOS}
+              speed={70}
+              logoHeight={34}
+              gap={64}
+              pauseOnHover
+              scaleOnHover
+              ariaLabel="Technologies"
+            />
           </div>
         </section>
 
@@ -577,12 +717,14 @@ function App() {
                     data-rise
                   >
                     <span className="shot__frame" data-clip>
-                      <img
-                        src={photo.image}
-                        alt={`${photo.title} Hackathon`}
-                        loading="lazy"
-                        decoding="async"
-                      />
+                      <GlareHover width="100%" height="100%" borderRadius="0" glareOpacity={0.4}>
+                        <img
+                          src={photo.thumb}
+                          alt={`${photo.title} Hackathon`}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </GlareHover>
                     </span>
                     <span>{photo.title}</span>
                   </a>
@@ -663,7 +805,7 @@ function App() {
       </div>
 
       <Analytics />
-    </>
+    </ClickSpark>
   );
 }
 
