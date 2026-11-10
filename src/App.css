@@ -346,3 +346,6 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 @media (max-width: 40rem) {
   .contact__head { padding: var(--space-lg); }
 }
+
+/* The resume menu opens upward: below the button it ran off the bottom of the first screen. */
+.resume-menu { top: auto; bottom: calc(100% + var(--space-xs)); }
