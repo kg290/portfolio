@@ -237,7 +237,7 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
    and only single items (an entry, a skill group, a certificate, a project) are glass. */
 .panel { color: var(--color-ink); }
 .day > .section:not(.seq):not(.contact)::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, transparent, color-mix(in oklab, var(--color-shade) 58%, transparent) 16%, color-mix(in oklab, var(--color-shade) 58%, transparent) 84%, transparent); pointer-events: none; }
-.rows > li, .stack__rows > div, #certifications .links li { border: 0; border-radius: var(--radius-card); background: color-mix(in oklab, var(--color-shade) 42%, transparent); -webkit-backdrop-filter: blur(8px) saturate(1.25); backdrop-filter: blur(8px) saturate(1.25); box-shadow: var(--glass-hi); }
+.rows > li, .stack__rows > div, .links--cards li { border: 0; border-radius: var(--radius-card); background: color-mix(in oklab, var(--color-shade) 42%, transparent); -webkit-backdrop-filter: blur(8px) saturate(1.25); backdrop-filter: blur(8px) saturate(1.25); box-shadow: var(--glass-hi); }
 
 /* Experience: separate cards hung on the rail. */
 .rows { display: grid; gap: var(--space-lg); border: 0; }
@@ -255,16 +255,16 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 .stack__loop { padding-top: var(--space-2xl); }
 
 /* Achievements: the photographs run the full width, the certificates are three cards. */
-.record__block:has(.shots) > *, #certifications > * { grid-column: 1 / -1; }
+.record .record__block > * { grid-column: 1 / -1; }
 .shots { gap: var(--gap-columns); }
 .highlights { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap-columns); }
-#certifications .links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); border: 0; }
-#certifications .links li { grid-template-columns: minmax(0, 1fr); align-content: space-between; gap: var(--space-xl); min-height: 200px; padding: var(--space-xl); }
+.links--cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); border: 0; }
+.links--cards li { grid-template-columns: minmax(0, 1fr); align-content: space-between; gap: var(--space-xl); min-height: 200px; padding: var(--space-xl); }
 
 @media (max-width: 60rem) {
   .stack__rows > div, .stack__rows > div:nth-child(n + 4) { grid-column: span 3; }
-  #certifications .links, .highlights { grid-template-columns: minmax(0, 1fr); }
-  #certifications .links li { min-height: 0; }
+  .links--cards, .highlights { grid-template-columns: minmax(0, 1fr); }
+  .links--cards li { min-height: 0; }
 }
 @media (max-width: 40rem) {
   .stack__rows > div, .stack__rows > div:nth-child(n + 4) { grid-column: 1 / -1; }
@@ -309,10 +309,13 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 #achievements, #contact { padding-top: 0; }
 
 /* Certificates: issuer on top, the title, and an open cue at the foot. The whole card is the link. */
-#certifications .links li { position: relative; grid-template-rows: auto 1fr auto; align-content: stretch; gap: var(--space-sm); transition: box-shadow var(--dur-short) var(--ease-out); }
-#certifications .links a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-card); }
-#certifications .links li:hover, #certifications .links li:focus-within { box-shadow: var(--glass-hi), inset 0 0 0 1px color-mix(in oklab, var(--color-accent-2) 45%, transparent); }
-#certifications .cert__issuer { color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; }
-#certifications .cert__open { font-weight: 600; color: var(--color-accent-2); }
-#certifications .cert__open b { display: inline-block; font-weight: inherit; transition: transform var(--dur-short) var(--ease-out); }
-#certifications .links li:hover .cert__open b { transform: translate(3px, -3px); }
+.links--cards li { position: relative; grid-template-rows: auto 1fr auto; align-content: stretch; gap: var(--space-sm); transition: box-shadow var(--dur-short) var(--ease-out); }
+.links--cards a::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-card); }
+.links--cards li:hover, .links--cards li:focus-within { box-shadow: var(--glass-hi), inset 0 0 0 1px color-mix(in oklab, var(--color-accent-2) 45%, transparent); }
+.record .eyebrow { color: var(--color-accent-2); font: 600 var(--text-xs)/1 var(--font-body); letter-spacing: 0.12em; text-transform: uppercase; }
+.links--cards .cert__open { font-weight: 600; color: var(--color-accent-2); }
+.links--cards .cert__open b { display: inline-block; font-weight: inherit; transition: transform var(--dur-short) var(--ease-out); }
+.links--cards li:hover .cert__open b { transform: translate(3px, -3px); }
+
+/* Hackathons: each standing is a label over its events as tags. */
+.highlights > li { display: grid; align-content: start; gap: var(--space-sm); }

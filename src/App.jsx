@@ -294,9 +294,9 @@ const HACKATHON_PHOTOS = [
 ];
 
 const HACKATHON_HIGHLIGHTS = [
-  "Finalist: Bajaj HackRX 2025, Innerve X, Project Morpheus, Rift 2026",
-  "Qualified: SIH, Ctrl+Space, Genesis 5",
-  "Participation: E-Rakshya IITD, GameTrade, NextGenAI, VoyageHack",
+  { label: "Finalist", items: ["Bajaj HackRX 2025", "Innerve X", "Project Morpheus", "Rift 2026"] },
+  { label: "Qualified", items: ["SIH", "Ctrl+Space", "Genesis 5"] },
+  { label: "Participation", items: ["E-Rakshya IITD", "GameTrade", "NextGenAI", "VoyageHack"] },
 ];
 
 function App() {
@@ -689,13 +689,16 @@ function App() {
 
             <div className="record__block">
               <h3 data-rise>Publications</h3>
-              <ol className="links">
+              <ol className="links links--cards">
                 {PUBLICATIONS.map((pub) => (
                   <li key={pub.link} data-rise>
+                    <span className="eyebrow">{pub.venue}</span>
                     <a href={pub.link} target="_blank" rel="noopener noreferrer" data-cursor="Read paper">
                       {pub.title}
                     </a>
-                    <span>{pub.venue}</span>
+                    <span className="cert__open" aria-hidden="true">
+                      Read paper <b>↗</b>
+                    </span>
                   </li>
                 ))}
               </ol>
@@ -704,8 +707,15 @@ function App() {
             <div className="record__block">
               <h3 data-rise>Hackathons</h3>
               <ul className="highlights" data-rise>
-                {HACKATHON_HIGHLIGHTS.map((item) => (
-                  <li key={item}>{item}</li>
+                {HACKATHON_HIGHLIGHTS.map((group) => (
+                  <li key={group.label}>
+                    <span className="eyebrow">{group.label}</span>
+                    <ul className="tags">
+                      {group.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </li>
                 ))}
               </ul>
               <div className="shots">
@@ -737,10 +747,10 @@ function App() {
 
             <div id="certifications" className="record__block">
               <h3 data-rise>Certifications</h3>
-              <ol className="links">
+              <ol className="links links--cards">
                 {CERTIFICATIONS.map((cert) => (
                   <li key={cert.title} data-rise>
-                    <span className="cert__issuer">{cert.issuer}</span>
+                    <span className="eyebrow">{cert.issuer}</span>
                     <a href={cert.link} target="_blank" rel="noopener noreferrer" data-cursor="Open PDF">
                       {cert.title}
                     </a>
