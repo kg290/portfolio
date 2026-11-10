@@ -1,7 +1,7 @@
 # Karnajeet Gosavi — Portfolio
 
 <p align="center">
-  <strong>An interactive portfolio for applied AI/ML engineering, full-stack systems, and research-led projects.</strong><br />
+  <strong>An interactive portfolio for software engineering, full-stack systems, and research-led projects.</strong><br />
   Built as a motion-rich React experience with a production contact pipeline.
 </p>
 
@@ -74,7 +74,7 @@ Contact
 
 ### Profile and content
 
-- AI/ML engineering profile focused on applied systems
+- Software engineering profile focused on applied systems
 - CGPA, publication, and certification KPI cards
 - Full-stack and agentic-Python résumé downloads
 - GitHub and LinkedIn entry points

@@ -279,7 +279,7 @@ const CERTIFICATIONS = [
 ];
 
 const ABOUT_PARAGRAPHS = [
-  "I am Karnajeet Gosavi, a B.Tech Computer Science student at VIT Pune (2023-2027) with a CGPA of 8.98, focused on applied AI/ML engineering.",
+  "I am Karnajeet Gosavi, a B.Tech Computer Science student at VIT Pune (2023-2027) with a CGPA of 8.98, focused on software engineering.",
   "My work centers on production-minded AI systems: NLP pipelines, computer vision models, and reliable API services that are designed to be measurable, maintainable, and deployment-ready.",
 ];
 
@@ -383,7 +383,7 @@ function App() {
 
           <div className="container hero__grid">
             <div className="hero__text">
-              <p className="eyebrow">AI/ML Engineer</p>
+              <p className="eyebrow">Software Engineer</p>
               <h1>
                 <span className="line">Karnajeet Gosavi</span> <span className="line">builds systems</span>{" "}
                 <span className="line line--accent">that ship.</span>
