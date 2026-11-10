@@ -266,14 +266,17 @@ const PUBLICATIONS = [
 
 const CERTIFICATIONS = [
   {
+    issuer: "Oracle",
     title: "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
     link: "/certifications/generative-ai.pdf",
   },
   {
+    issuer: "Oracle",
     title: "Oracle Cloud Infrastructure 2025 Certified Observability Professional",
     link: "/certifications/cloudobsproff.pdf",
   },
   {
+    issuer: "IBM",
     title: "IBM DevOps and Software Engineering Professional Certificate",
     link: "/certifications/md3121.pdf",
   },
@@ -737,10 +740,13 @@ function App() {
               <ol className="links">
                 {CERTIFICATIONS.map((cert) => (
                   <li key={cert.title} data-rise>
+                    <span className="cert__issuer">{cert.issuer}</span>
                     <a href={cert.link} target="_blank" rel="noopener noreferrer" data-cursor="Open PDF">
                       {cert.title}
                     </a>
-                    <span>PDF</span>
+                    <span className="cert__open" aria-hidden="true">
+                      View certificate <b>↗</b>
+                    </span>
                   </li>
                 ))}
               </ol>
