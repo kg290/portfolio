@@ -1,14 +1,15 @@
 import postgres from "postgres";
 
-const DATABASE_URL =
-  process.env.POSTGRES_URL ||
-  process.env.DATABASE_URL ||
-  process.env.DATABASE_POSTGRES_URL;
-
 let sql;
 let schemaReady = false;
 
 function getDatabaseClient() {
+  // Read per call: on Cloudflare Workers, process.env is only filled once a request arrives.
+  const DATABASE_URL =
+    process.env.POSTGRES_URL ||
+    process.env.DATABASE_URL ||
+    process.env.DATABASE_POSTGRES_URL;
+
   if (!DATABASE_URL) {
     throw new Error("Database is not configured. Set POSTGRES_URL or DATABASE_URL.");
   }
@@ -23,6 +24,14 @@ function getDatabaseClient() {
   }
 
   return sql;
+}
+
+// Cloudflare Workers cannot reuse a connection across requests, so the Worker closes it after each one.
+export async function closeDatabase() {
+  if (!sql) return;
+  const client = sql;
+  sql = undefined;
+  await client.end({ timeout: 5 });
 }
 
 async function ensureSchema(db) {

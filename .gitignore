@@ -49,3 +49,5 @@ task.txt
 *.sw?
 
 .vercel
+.wrangler
+.dev.vars*
