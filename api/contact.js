@@ -1,6 +1,9 @@
 import postgres from "postgres";
 
-const DATABASE_URL = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+const DATABASE_URL =
+  process.env.POSTGRES_URL ||
+  process.env.DATABASE_URL ||
+  process.env.DATABASE_POSTGRES_URL;
 
 let sql;
 let schemaReady = false;
