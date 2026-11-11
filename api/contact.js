@@ -62,6 +62,36 @@ function normalizeText(value, maxLength = 4000) {
   return String(value || "").trim().slice(0, maxLength);
 }
 
+// Email alert via Resend. Skipped when not configured; a failure never loses the saved message.
+async function notifyByEmail({ name, email, message }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.CONTACT_NOTIFY_EMAIL;
+  if (!apiKey || !to) return;
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: process.env.CONTACT_FROM_EMAIL || "Portfolio <onboarding@resend.dev>",
+        to: [to],
+        reply_to: email,
+        subject: `Portfolio message from ${name.replace(/\s+/g, " ")}`,
+        text: `From: ${name} <${email}>\n\n${message}`,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Contact email failed", response.status, await response.text());
+    }
+  } catch (error) {
+    console.error("Contact email failed", error);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "POST, OPTIONS");
@@ -124,6 +154,8 @@ export default async function handler(req, res) {
         ${userAgent}
       )
     `;
+
+    await notifyByEmail({ name, email, message });
 
     return res
       .status(200)
