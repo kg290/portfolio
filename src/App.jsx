@@ -295,6 +295,41 @@ const HACKATHON_HIGHLIGHTS = [
   { label: "Participation", items: ["E-Rakshya IITD", "GameTrade", "NextGenAI", "VoyageHack"] },
 ];
 
+// The contribution snake my GitHub profile already generates daily (Platane/snk), recoloured for this page.
+const SNAKE_URL = "https://raw.githubusercontent.com/kg290/kg290/output/github-contribution-grid-snake-dark.svg";
+// An <img> cannot be styled from outside, so the palette is appended to the SVG itself; a later :root wins.
+const SNAKE_THEME = `<style>:root{--cb:oklch(92% 0.06 85 / 0.08);--ce:oklch(92% 0.06 85 / 0.07);--c0:oklch(92% 0.06 85 / 0.07);--c1:oklch(42% 0.07 70);--c2:oklch(58% 0.085 70);--c3:oklch(74% 0.09 75);--c4:oklch(90% 0.05 88);--cs:oklch(83% 0.095 62)}@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style></svg>`;
+
+function ContributionSnake() {
+  const [src, setSrc] = useState(null);
+
+  useEffect(() => {
+    let url;
+    let live = true;
+    fetch(SNAKE_URL)
+      .then((res) => (res.ok ? res.text() : Promise.reject(res.status)))
+      .then((svg) => {
+        if (!live) return;
+        const end = svg.lastIndexOf("</svg>");
+        if (end < 0) throw new Error("not an svg");
+        url = URL.createObjectURL(new Blob([svg.slice(0, end) + SNAKE_THEME], { type: "image/svg+xml" }));
+        setSrc(url);
+      })
+      // Fall back to the file as GitHub serves it: wrong colours beat an empty frame.
+      .catch(() => live && setSrc(SNAKE_URL));
+    return () => {
+      live = false;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, []);
+
+  return (
+    <a className="snake" href={GITHUB} target="_blank" rel="noreferrer" data-rise>
+      {src && <img src={src} alt="A snake eating a year of my GitHub contributions" width="880" height="192" decoding="async" />}
+    </a>
+  );
+}
+
 function App() {
   const [isResumeMenuOpen, setIsResumeMenuOpen] = useState(false);
   const [resumeMenuUp, setResumeMenuUp] = useState(false);
@@ -498,6 +533,8 @@ function App() {
                 decoding="async"
               />
             </figure>
+
+            <ContributionSnake />
           </div>
         </section>
 
