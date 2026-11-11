@@ -12,6 +12,9 @@ const PINNED = `(min-width: 60rem) and (min-height: 680px) and ${MOTION}`;
 // Pointer effects need a real pointer.
 const POINTER = `(hover: hover) and (pointer: fine) and ${MOTION}`;
 
+// shortcut: guesses a slow machine from core count and memory, which misses a weak GPU behind many cores; measure frame time if that shows up.
+const LITE = navigator.hardwareConcurrency <= 4 || navigator.deviceMemory <= 4;
+
 let lenis = null;
 
 export function scrollToId(id) {
@@ -72,39 +75,36 @@ function buildScroll() {
     { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } },
   );
 
-  // The scene: every chapter has its own photograph, and each arrives through a different cut
-  // (iris, wipe, slant, iris from the floor, rise) scrubbed as the chapter's top crosses the screen.
+  // The scene: every chapter has its own painting. As the chapter's top crosses the screen the next painting
+  // comes up as a line drawing over the last, then its colour opens from the centre.
   const shots = gsap.utils.toArray(".scene__shot");
   gsap.fromTo(shots, { scale: 1.04 }, { scale: 1.32, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.8 } });
-  const cuts = [
-    ["#experience", "circle(0% at 50% 62%)", "circle(150% at 50% 62%)"],
-    ["#projects", "inset(0% 100% 0% 0%)", "inset(0% 0% 0% 0%)"],
-    ["#skills", "polygon(0% 0%, 0% 0%, -40% 100%, -40% 100%)", "polygon(0% 0%, 140% 0%, 100% 100%, -40% 100%)"],
-    ["#achievements", "circle(0% at 50% 100%)", "circle(150% at 50% 100%)"],
-    ["#contact", "inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
-  ];
-  // Only the shot on screen and the one cutting in are drawn: a shot still closed, or fully covered by the next, is hidden.
+  // The sun over the harbour blooms as the page leaves the hero.
+  gsap.fromTo(".scene__sun", { scale: 0.35, opacity: 0.2 }, { scale: 1.5, opacity: 1, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom 40%", scrub: true } });
+  const chapters = ["#about", "#experience", "#projects", "#skills", "#achievements", "#contact"];
+  // Only the shot on screen and the one coming in are drawn: a shot still closed, or fully covered by the next, is hidden.
   const open = shots.map(() => 0);
   const cull = () =>
     shots.forEach((shot, i) => {
       shot.style.visibility = (i > 0 && open[i] === 0) || open[i + 1] === 1 ? "hidden" : "";
     });
-  undo.push(() => shots.forEach((shot) => (shot.style.visibility = "")));
-  cuts.forEach(([trigger, from, to], i) => {
-    gsap.set(shots[i + 1], { opacity: 1 });
-    gsap.fromTo(
-      shots[i + 1],
-      { clipPath: from },
-      {
-        clipPath: to,
-        ease: "none",
-        scrollTrigger: { trigger, start: "top bottom", end: "top 20%", scrub: 0.6 },
+  const sun = document.querySelector(".scene__sun");
+  undo.push(() => shots.forEach((shot) => { shot.style.visibility = ""; shot.classList.remove("is-open"); }));
+  chapters.forEach((trigger, i) => {
+    const shot = shots[i + 1];
+    const tl = gsap
+      .timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger, start: "top bottom", end: "top 10%", scrub: 0.6 },
         onUpdate() {
           open[i + 1] = this.progress();
+          shot.classList.toggle("is-open", open[i + 1] === 1);
+          if (!i) sun.style.visibility = open[1] === 1 ? "hidden" : "";
           cull();
         },
-      },
-    );
+      })
+      .fromTo(shot, { opacity: 0 }, { opacity: 1, duration: LITE ? 1 : 0.4 });
+    if (!LITE) tl.fromTo(shot.querySelector(".scene__color"), { "--r": "-35%" }, { "--r": "105%", duration: 0.7 }, 0.3);
   });
   cull();
 
@@ -231,6 +231,9 @@ function buildPinned() {
   root.classList.add("is-pinned"); // CSS stacks each scene's items in one cell
 
   const items = gsap.utils.toArray(".seq__item");
+  // Blurring type this large on every frame is the most expensive effect on the page; slow machines get the fade alone.
+  const soft = LITE ? {} : { filter: "blur(18px)" };
+  const sharp = LITE ? {} : { filter: "blur(0px)" };
   const tl = gsap.timeline({
     defaults: { ease: "none", duration: 1 },
     scrollTrigger: {
@@ -244,8 +247,8 @@ function buildPinned() {
     },
   });
   items.forEach((item, i) => {
-    if (i) tl.fromTo(item, { autoAlpha: 0, yPercent: 28, scale: 0.86, filter: "blur(18px)" }, { autoAlpha: 1, yPercent: 0, scale: 1, filter: "blur(0px)" }, i * 2 - 1);
-    if (i < items.length - 1) tl.to(item, { autoAlpha: 0, yPercent: -28, scale: 1.12, filter: "blur(18px)" }, i * 2 + 1);
+    if (i) tl.fromTo(item, { autoAlpha: 0, yPercent: 28, scale: 0.86, ...soft }, { autoAlpha: 1, yPercent: 0, scale: 1, ...sharp }, i * 2 - 1);
+    if (i < items.length - 1) tl.to(item, { autoAlpha: 0, yPercent: -28, scale: 1.12, ...soft }, i * 2 + 1);
   });
   tl.to({}, { duration: 0.6 });
 
@@ -343,6 +346,7 @@ function buildPointer() {
 
 export default function useCinematics() {
   useEffect(() => {
+    document.documentElement.classList.toggle("lite", LITE);
     const mm = gsap.matchMedia();
     mm.add(PINNED, buildPinned);
     mm.add(MOTION, buildScroll);

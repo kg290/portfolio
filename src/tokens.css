@@ -9,17 +9,18 @@
   --color-error: oklch(72% 0.15 27); --color-success: oklch(76% 0.13 150);
   --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
   --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-  --color-paper: oklch(17.5% 0.014 268); --color-paper-2: oklch(21% 0.016 268); --color-paper-3: oklch(25% 0.017 268);
-  --color-ink: oklch(96% 0.006 75); --color-ink-2: oklch(85% 0.010 262); --color-muted: oklch(70% 0.016 262);
-  --color-rule: oklch(30% 0.016 266); --color-light: oklch(100% 0 0); --color-shade: oklch(10% 0.022 268);
-  --color-accent: oklch(77% 0.10 274); --color-accent-ink: oklch(19% 0.035 274); --color-accent-hi: oklch(84% 0.085 274);
-  --color-accent-deep: oklch(44% 0.13 274); --color-accent-soft: oklch(91% 0.038 274); --color-focus: oklch(80% 0.10 274);
+  --color-paper: oklch(16% 0.016 60); --color-paper-2: oklch(20% 0.018 60); --color-paper-3: oklch(24% 0.02 60);
+  --color-ink: oklch(96% 0.012 85); --color-ink-2: oklch(86% 0.02 80); --color-muted: oklch(72% 0.025 75);
+  --color-rule: oklch(32% 0.025 65); --color-light: oklch(100% 0 0); --color-shade: oklch(11% 0.02 55);
+  --color-accent: oklch(90% 0.05 88); --color-accent-ink: oklch(21% 0.03 60); --color-accent-hi: oklch(95% 0.035 90);
+  --color-accent-deep: oklch(42% 0.07 70); --color-accent-soft: oklch(93% 0.03 88); --color-focus: oklch(86% 0.09 85);
   --color-accent-2: oklch(83% 0.095 62); --color-dusk: oklch(70% 0.12 330);
   --color-day-ink: oklch(22% 0.022 268); --color-day-muted: oklch(38% 0.022 266); --color-fog: oklch(94% 0.012 70);
   --color-well: oklch(95.5% 0.008 75); --color-well-2: oklch(92% 0.010 75); --color-well-ink: oklch(21% 0.016 268); --color-well-muted: oklch(47% 0.016 265); --color-well-rule: oklch(87.5% 0.009 75); --color-card: oklch(99.5% 0.003 75);
-  --glass: oklch(22% 0.018 268 / 0.58); --glass-blur: 22px;
-  --glass-hi: inset 0 1px 0 oklch(100% 0 0 / 0.10), inset 0 0 0 1px oklch(100% 0 0 / 0.06);
-  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.06) inset, 0 40px 80px -32px oklch(8% 0.02 268 / 0.7);
+  --glass: oklch(20% 0.02 55 / 0.58); --glass-blur: 22px;
+  /* A gilt hairline, like the edge of a frame. */
+  --glass-hi: inset 0 1px 0 oklch(92% 0.06 85 / 0.22), inset 0 0 0 1px oklch(82% 0.09 80 / 0.2);
+  --shadow-card: 0 1px 0 oklch(100% 0 0 / 0.06) inset, 0 40px 80px -32px oklch(8% 0.02 55 / 0.7);
   --font-display: "Wix Madefor Display", ui-sans-serif, system-ui, sans-serif; --font-body: "Wix Madefor Text", ui-sans-serif, system-ui, sans-serif;
   --radius-card: 18px; --radius-inner: 10px; --radius-pill: 999px; --rule-hair: 1px;
   --tracking-display: -0.022em; --display-weight: 500;

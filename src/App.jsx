@@ -39,23 +39,23 @@ const EMAIL = "karnajeet.gosavi23@vit.edu";
 const GITHUB = "https://github.com/kg290";
 const LINKEDIN = "https://www.linkedin.com/in/karnajeet-gosavi";
 
-// One photograph per chapter, in scroll order after the hero's: experience, projects, about, achievements, contact.
-const SCENES = [
-  "/hero/hills-1920.jpg",
-  "/hero/dunes-1920.jpg",
-  "/hero/lake-1920.jpg",
-  "/hero/field-1920.jpg",
-  "/hero/dusk-shore-1920.jpg",
-];
+// One painting per chapter, in scroll order after the hero's: a school, a harvest, a tower, the instruments, a spring, two hands that reach.
+const SCENES = ["about", "experience", "projects", "stack", "achievements", "contact"];
+const art = (name) => ({
+  src: `/art/${name}-1920.jpg`,
+  srcSet: `/art/${name}-960.jpg 960w, /art/${name}-1920.jpg 1920w`,
+  sizes: "100vw",
+});
 
 const COMMONS = "https://commons.wikimedia.org/wiki/File:";
 const CREDITS = [
-  { name: "Thomas Bresson", license: "CC BY 3.0", href: COMMONS + "Vallee-brouillard.jpg" },
-  { name: "Caleb Riston", license: "CC0", href: COMMONS + "PalouseFromSteptoeButteMay2023-1.jpg" },
-  { name: "BLM Utah, Bob Wick", license: "public domain", href: COMMONS + "Utah_Dunes_Landscape_-_West_Desert_District.jpg" },
-  { name: "Tobias Alt", license: "CC BY-SA 4.0", href: COMMONS + "Peyto_Lake-Banff_NP-Canada.jpg" },
-  { name: "sagesolar", license: "CC BY 4.0", href: COMMONS + "Rapeseed_field_near_South_Harting_(55536076893).jpg" },
-  { name: "Matt Harrop", license: "CC BY-SA 2.0", href: COMMONS + "Conwy_Estuary_at_dusk_-_geograph.org.uk_-_4556293.jpg" },
+  { name: "Claude Lorrain", license: "public domain", href: COMMONS + "Claude_Lorrain_-_Seaport_with_the_Embarkation_of_the_Queen_of_Sheba_-_WGA05002.jpg" },
+  { name: "Raphael", license: "public domain", href: COMMONS + "%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg" },
+  { name: "Pieter Bruegel the Elder", license: "public domain", href: COMMONS + "Pieter_Bruegel_the_Elder-_The_Harvesters_-_Google_Art_Project.jpg" },
+  { name: "Pieter Bruegel the Elder", license: "public domain", href: COMMONS + "Pieter_Bruegel_the_Elder_-_The_Tower_of_Babel_(Vienna)_-_Google_Art_Project_-_edited.jpg" },
+  { name: "Hans Holbein the Younger", license: "public domain", href: COMMONS + "Hans_Holbein_the_Younger_-_The_Ambassadors_-_Google_Art_Project.jpg" },
+  { name: "Sandro Botticelli", license: "public domain", href: COMMONS + "Sandro_Botticelli_-_La_Primavera_-_Google_Art_Project.jpg" },
+  { name: "Michelangelo", license: "public domain", href: COMMONS + "'Adam's_Creation_Sistine_Chapel_ceiling'_by_Michelangelo_JBU33cut.jpg" },
 ];
 
 const NAV_ITEMS = [
@@ -335,18 +335,13 @@ function App() {
     <ClickSpark sparkColor={apricot} sparkCount={10} sparkRadius={28} sparkSize={12}>
       <div className="scene" aria-hidden="true">
         <div className="scene__cam">
-          <img
-            className="scene__shot"
-            src="/hero/dusk-1920.jpg"
-            srcSet="/hero/dusk-960.jpg 960w, /hero/dusk-1920.jpg 1920w"
-            sizes="100vw"
-            width="1920"
-            height="1254"
-            alt=""
-            fetchPriority="high"
-          />
-          {SCENES.map((src) => (
-            <img key={src} className="scene__shot" src={src} alt="" decoding="async" fetchPriority="low" />
+          <img className="scene__shot" {...art("hero")} width="1920" height="1460" alt="" fetchPriority="high" />
+          <div className="scene__sun" />
+          {SCENES.map((name) => (
+            <div key={name} className="scene__shot">
+              <img className="scene__ghost" src={`/art/${name}-ghost.jpg`} alt="" decoding="async" fetchPriority="low" />
+              <img className="scene__color" {...art(name)} alt="" decoding="async" fetchPriority="low" />
+            </div>
           ))}
         </div>
         <div className="scene__grade" />
@@ -803,7 +798,7 @@ function App() {
           <p className="footer__mark">Karnajeet Gosavi</p>
           <p>&copy; {new Date().getFullYear()} Karnajeet Gosavi. All rights reserved.</p>
           <p data-credits>
-            Photographs:{" "}
+            Paintings:{" "}
             {CREDITS.map((credit, idx) => (
               <span key={credit.href}>
                 {idx > 0 && ", "}
