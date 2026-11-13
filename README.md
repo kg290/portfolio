@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://portfolio-kg290s-projects.vercel.app/"><img src="https://img.shields.io/badge/live_portfolio-visit-111111?style=flat-square&logo=vercel&logoColor=white" alt="Live portfolio" /></a>
+  <a href="https://kg290.runs-on.dev/"><img src="https://img.shields.io/badge/live_portfolio-visit-111111?style=flat-square&logo=vercel&logoColor=white" alt="Live portfolio" /></a>
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=111111" alt="React 19" />
   <img src="https://img.shields.io/badge/Vite-6-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite 6" />
   <img src="https://img.shields.io/badge/Deployed_on-Vercel-111111?style=flat-square&logo=vercel&logoColor=white" alt="Vercel" />
@@ -296,7 +296,7 @@ Update the canonical URL and social metadata in `index.html` when deploying to a
 
 ## Live links
 
-- [Live portfolio](https://portfolio-kg290s-projects.vercel.app/)
+- [Live portfolio](https://kg290.runs-on.dev/)
 - [GitHub profile](https://github.com/kg290)
 - [LinkedIn](https://www.linkedin.com/in/karnajeet-gosavi)
 
