@@ -523,7 +523,7 @@ function App() {
               </p>
             </div>
 
-            <figure className="about__portrait" data-clip>
+            <figure className="about__portrait" data-clip="still">
               <img
                 src={AVATAR_URL}
                 alt="Karnajeet Gosavi"

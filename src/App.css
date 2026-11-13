@@ -145,7 +145,7 @@ html:not(.is-pinned) .work__frame .electric-border__canvas { display: none; }
 .about__portrait { grid-column: 9 / span 4; aspect-ratio: 4 / 5; border-radius: var(--radius-card); overflow: hidden; }
 .snake { grid-column: 1 / -1; display: block; aspect-ratio: 880 / 192; }
 .snake img { display: block; width: 100%; height: auto; }
-.about__portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: contrast(1.04) saturate(1.03); }
+.about__portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; filter: contrast(1.04) saturate(1.03); }
 .stack__rows { grid-column: 5 / span 8; border-bottom: 1px solid var(--color-rule); }
 .stack__rows > div { display: grid; grid-template-columns: 4fr 8fr; gap: var(--gap-columns); padding-block: var(--space-lg); border-top: 1px solid var(--color-rule); }
 .stack__rows dt { font-weight: 500; }

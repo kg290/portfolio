@@ -197,8 +197,11 @@ function buildScroll() {
       { clipPath: "inset(100% 0% 0% 0%)" },
       { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power4.out", scrollTrigger: { trigger: frame, start: "top 86%", once: true } },
     );
+    const img = frame.querySelector("img");
+    // A portrait keeps its zoom but hangs from the top edge without drifting, so the head is never cropped.
+    if (frame.dataset.clip === "still") return gsap.set(img, { scale: 1.16, transformOrigin: "50% 0%" });
     gsap.fromTo(
-      frame.querySelector("img"),
+      img,
       { yPercent: -7, scale: 1.16 },
       { yPercent: 7, scale: 1.16, ease: "none", scrollTrigger: { trigger: frame, start: "top bottom", end: "bottom top", scrub: true } },
     );
